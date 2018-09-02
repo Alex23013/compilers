@@ -19,6 +19,7 @@ class Token_type(Enum):
     
     BRACKET = 'bracket'
     ERROR = 'error'
+
 class Tokens(Enum):
     # Types
     CHAR = 'char'
@@ -68,11 +69,15 @@ comp_operators = {
     '=>'
 }
  
- bool_operators = {
+
+# TODO: split this, and include the words in the reserved words set.
+bool_operators = {
     'or',
     'and',
+    'not',
     '||',
-    '&&'
+    '&&',
+    '!'
  }
 
 
@@ -84,25 +89,3 @@ comp_operators = {
 # Octal: 0o[0-8]
 # Binario: 0b[0-1]
 # ver qué pasa si no se retorna nada
-
-# Variables:
-# type variable
-# type variable = value
-# char variable = "a"
-
-# Array:
-# type[] variable 
-# type[] variable = [value, value, value, ...]
-
-# String
-# char[] variable
-# char[] variable = "value"
-# char[] variable = ["v","a","l", ...]
-
-# Function
-# func name(type name, type name, ...) : return_type  
-
-# Control
-# if (something)
-# else (something)
-# while (something)
