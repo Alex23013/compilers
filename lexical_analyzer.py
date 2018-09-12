@@ -95,6 +95,14 @@ arithm_operators = {
     '^', # right associative 
 }
 
+double_operators = {
+    '++',
+    '--',
+    '*=',
+    '+=',
+    '-=',
+}
+
 comp_operators = {
     '==',
     '!=',
