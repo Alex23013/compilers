@@ -1,6 +1,12 @@
 from enum import Enum
 import re
 
+class Token:
+    def __init__(self, token_type, value='', lineN=0):
+        self.token_type = token_type
+        self.value = value
+        self.lineN = lineN
+
 class Matcher:
     # After this you have to check the right side of the declaration.
     pattern_var_def_decl = re.compile(r'(\w+(?:\[\])?)\s+(\w+)(?:\s*=\s*([^s].*))?$')
@@ -12,10 +18,12 @@ class Tokenizer:
     def def_decl(self, lexeme_tuple):
         if len(lexeme_tuple) != 3:
             raise ValueError("Define and declaration need 3 lexemes")
+        if lexeme_tuple[-1]: # definition
+            pass
+
     
     def assignment(self, lexeme_tuple):
         pass
-        
         
     statement_types = {
         'DECLARATION': def_decl, # type var
