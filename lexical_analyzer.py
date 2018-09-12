@@ -1,55 +1,130 @@
 from enum import Enum
 import re
 
+STATEMENT_DEF_DECL = 'DEF_DECL'
+STATEMENT_ASSIGNMENT = 'ASSIGNMENT'
+STATEMENT_ERROR = 'ERROR'
+
+RELEX_STR = 'STRING'
+RELEX_NUM = 'NUMBER'
+RELEX_VAR = 'VAR'
+RELEX_OPERATION = 'OPERATION'
+RELEX_FUNC_CALL = 'FUNC_CALL'
+RELEX_FUNC_DECL = 'FUNC_DECL'
+RELEX_ANY_LEX = 'ANY_LEX'
+RELEX_ERROR = 'ERROR'
+
 class Token:
     def __init__(self, token_type, value='', lineN=0):
         self.token_type = token_type
         self.value = value
         self.lineN = lineN
 
+    def __repr__(self):
+        return f"Token({self.token_type})"
+
+    def __str__(self):
+        return f"Token<{self.token_type}, {self.value}, {self.lineN}>"
+
 class Matcher:
+    pattern_comment = re.compile(r'//.*')
+
     # After this you have to check the right side of the declaration.
-    pattern_var_def_decl = re.compile(r'(\w+(?:\[\])?)\s+(\w+)(?:\s*=\s*(".*"|\d+|[\D\w][\w]*))?(?:\s*\\.*)?$')
-    # TODO: this is not right, the right part of the '=' can be:
-    # variable, number, string
-    # operation: a + b, x - y, ...
-    # When this part is an operation, it can contains blank spaces, otherwise not.
-    
+    pattern_var_def_decl = re.compile(r'(\w+(?:\[\])?)\s+(\w+)(?:\s*=\s*(\S.*))?(?:\s*//.*)?', re.I)
+    # (\S.*) match any_lex
+    # (?:\s*//.*)? match comments
 
     # You have to check the right site of the assignment too.
-    paterm_assingment = re.compile(r'(\w+)\s*=\s*([^\s].*)(?:\s*\\.*)?$')
+    pattern_assingment = re.compile(r'([a-z_]\w*)\s*=\s*(\S.*)(?:\s*//.*)?', re.I)
+
+    repattern_number = re.compile(r'(?:0x[0-9a-f]+|0o[0-7]+|0b[01]+)|(?:\d*\.)?\d+', re.I)
+
+    repattern_variale = re.compile(r'[a-z_]\w*', re.I)
+
+
+
+    @staticmethod
+    def match(line):
+        line = line.strip()
+        match = Matcher.pattern_comment.fullmatch(line)
+        if (match):
+            return 
+        
+        match = Matcher.pattern_var_def_decl.fullmatch(line)
+        if (match):
+            return (STATEMENT_DEF_DECL, match.groups)
+        
+        match = Matcher.pattern_assingment.match(line)
+        if (match):
+            return (STATEMENT_ASSIGNMENT, match.groups)
+
+        return (STATEMENT_ERROR, line)
+
+    @staticmethod
+    def rematch(relexeme):
+        relexeme = relexeme.strip()
+
+        if relexeme[0] == '"':  # Is a string
+            if relexeme[-1] == '"':
+                return (RELEX_STR, relexeme[1:-1])
+            else:
+                return (RELEX_ERROR, "Incorrect number of quotes")
+
+        if Matcher.repattern_number.fullmatch(relexeme): 
+            return (RELEX_NUM, relexeme)
+
+        if Matcher.repattern_variale.fullmatch(relexeme): 
+            return (RELEX_VAR, relexeme)
+        
+        # TODO: match other relex...
+        ###return (RELEX_ANY_LEX, relexeme)
 
 class Tokenizer:
-    def def_decl(self, lexeme_tuple, lineN):
+    @staticmethod
+    def def_decl(lexeme_tuple, lineN):
         if len(lexeme_tuple) != 3:
-            raise ValueError("Define and declaration need 3 lexemes")
+            raise ValueError(f"Define and declaration need 3 lexemes. LINE: {lineN}")
 
         tokens = []
         tokens.append(Token(Token_type.TYPE, lexeme_tuple[0], lineN))
         tokens.append(Token(Token_type.VARIABLE, lexeme_tuple[1], lineN))
         if lexeme_tuple[2]: # definition
-            if lexeme_tuple[2][0] == '"': # Is a string
-                if lexeme_tuple[2][-1] == '"':
-                    tokens.append(Token(Token_type.STRING, lexeme_tuple[2][1:-1], lineN))
-                else:
-                    tokens.append(Token(Token_type.ERROR, "Incorrect number of quotes"))
-            elif lexeme_tuple[2].isdigit(): # Is a number # TODO: replace this with a regex that accepts binary, octal, hexadecimal
-                tokens.append(Token(Token_type.NUMBER, lexeme_tuple[2], lineN))
-            else: # Is a variable name
-                tokens.append(Token(Token_type.NUMBER, lexeme_tuple[2], lineN))
+            tokens.append(Token(Token_type.ASSIGN_OPERATOR, '=', lineN))
+
+            any_lex = Matcher.rematch(lexeme_tuple[3])
+            tokens.extend(Tokenizer.retokenize(any_lex, lineN))
+
+        return tokens
             
-    
-    def assignment(self, lexeme_tuple):
-        pass
-        
+ 
+    @staticmethod 
+    def assignment(lexeme_tuple, lineN):
+        if len(lexeme_tuple) != 3:
+            raise ValueError(f"Assignment need 2 lexemes. LINE: {lineN}")
+        tokens = []
+        tokens.append(Token(Token_type.VARIABLE, lexeme_tuple[0], lineN))
+        tokens.append(Token(Token_type.ASSIGN_OPERATOR, '=', lineN))
+
+        any_lex = Matcher.rematch(lexeme_tuple[3])
+        tokens.extend(Tokenizer.retokenize(any_lex, lineN))
+
+    @staticmethod
+    def stmnt_error(line_content, lineN):
+        return [Token(Token_type.ERROR, f"Match_Error in <{line_content}>", lineN)]
+
     statement_types = {
-        'DECLARATION': def_decl, # type var
-        'DEFINITION': def_decl,  # type var = val
-        'ASSIGNMENT': assignment,
+        STATEMENT_DEF_DECL: def_decl, # type var; type var = val
+        STATEMENT_ASSIGNMENT: assignment,
+        STATEMENT_ERROR: stmnt_error,
     }
 
 
-    def tokenize(self, lexeme_tuple, statement_type, lineN):
+    @staticmethod
+    def tokenize(lexeme_tuple, statement_type, lineN):
+        pass
+
+    @staticmethod 
+    def retokenize(any_lex, lineN):
         pass
 
 
