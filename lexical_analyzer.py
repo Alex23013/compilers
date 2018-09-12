@@ -19,6 +19,10 @@ class Matcher:
     # You have to check the right site of the assignment too.
     paterm_assingment = re.compile(r'(\w+)\s*=\s*([^\s].*)(?:\s*\\.*)?$')
 
+    paterm_control = re.compile(r'(})?(if|while|else|elif)\s*(\((.*)\))*\s*{(?:\s*\/\/.*)? $')
+
+    paterm_function = re.compile(r'func\s*(\w+)\s*\((.*)\)\s*:\s*(\w+)\s*{$') #TODO: function name has to be numbers and letters
+
 class Tokenizer:
     def def_decl(self, lexeme_tuple, lineN):
         if len(lexeme_tuple) != 3:
@@ -30,7 +34,7 @@ class Tokenizer:
         if lexeme_tuple[2]: # definition
             if lexeme_tuple[2][0] == '"': # Is a string
                 if lexeme_tuple[2][-1] == '"':
-                    tokens.append(Token(Token_type.STRING, lexeme_tuple[2][1:-1], lineN))
+                    tokens.append(Token(Token_type.STRING, lexeme_tuple[2][1:-1], lineN)) #TODO: erase string spaces
                 else:
                     tokens.append(Token(Token_type.ERROR, "Incorrect number of quotes"))
             elif lexeme_tuple[2].isdigit(): # Is a number # TODO: replace this with a regex that accepts binary, octal, hexadecimal
@@ -41,6 +45,28 @@ class Tokenizer:
     
     def assignment(self, lexeme_tuple):
         pass
+    
+    def control(self, lexeme_tuple, lineN):
+        tokens = []
+        if lexeme_tuple[0] == "}": # else |elif
+            tokens.append(Token(Token_type.BRACKET, lexeme_tuple[0], lineN))
+            tokens.append(Token(Token_type.CONTROL_STRUCT, lexeme_tuple[1], lineN))
+        else:
+            tokens.append(Token(Token_type.CONTROL_STRUCT, lexeme_tuple[0], lineN))
+            tokens.append(Token(Token_type.BRACKET, '(', lineN))        
+            #tokens.append(rematch(lexeme_tuple[0], lineN))
+            tokens.append(Token(Token_type.BRACKET, ')', lineN))
+    def func(self, lexeme_tuple, lineN):
+        tokens = []
+        tokens.append(Token(Token_type.RESERVED_WORD, lexeme_tuple[0], lineN))#func
+        tokens.append(Token(Token_type.RESERVED_WORD, lexeme_tuple[1], lineN))#func name
+        tokens.append(Token(Token_type.BRACKET, '(', lineN))
+        #tokens.append(rematch(lexeme_tuple[2], lineN))
+        tokens.append(Token(Token_type.BRACKET, ')', lineN))
+        #tokens.append(Token(Token_type.BRACKET, ':', lineN)) # TODO: define : type
+        if len(lexeme_tuple) == 4:
+            tokens.append(Token(Token_type.TYPE, lexeme_tuple[3], lineN))
+        tokens.append(Token(Token_type.BRACKET, '{', lineN))
         
     statement_types = {
         'DECLARATION': def_decl, # type var
@@ -94,6 +120,7 @@ reserved_words = {
     'while',
     'if',
     'else',
+    'elif',
     'func',
     'return',
 }
@@ -159,4 +186,4 @@ close_brackets = {
 # Hexadecimal: 0x[0-9A-F]
 # Octal: 0o[0-8]
 # Binario: 0b[0-1]
-# ver qué pasa si no se retorna nada
+# ver que pasa si no se retorna nada
