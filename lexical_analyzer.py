@@ -1,5 +1,6 @@
 from enum import Enum
 import re
+import pprint
 
 STATEMENT_DEF_DECL = 'DEF_DECL'
 STATEMENT_ASSIGNMENT = 'ASSIGNMENT'
@@ -21,112 +22,159 @@ class Token:
         self.lineN = lineN
 
     def __repr__(self):
-        return f"Token({self.token_type})"
+        return f"Token({self.token_type.name})"
 
     def __str__(self):
-        return f"Token<{self.token_type}, {self.value}, {self.lineN}>"
+        return f"Token: ({self.token_type.name}, {self.value}, {self.lineN})"
 
-class Matcher:
-    pattern_comment = re.compile(r'//.*')
+# class Matcher:
+pattern_comment = re.compile(r'//.*')
 
-    # After this you have to check the right side of the declaration.
-    pattern_var_def_decl = re.compile(r'(\w+(?:\[\])?)\s+(\w+)(?:\s*=\s*(\S.*))?(?:\s*//.*)?', re.I)
-    # (\S.*) match any_lex
-    # (?:\s*//.*)? match comments
+pattern_var_def_decl = re.compile(r'([a-z_]\w*(?:\[\])?)\s+([a-z_]\w*)(?:\s*=\s*(\S.*))?(?:\s*//.*)?', re.I)
+# (\S.*) match any_lex
+# (?:\s*//.*)? match comments
+# [a-z_]\w* match typename and var name
 
-    # You have to check the right site of the assignment too.
-    pattern_assingment = re.compile(r'([a-z_]\w*)\s*=\s*(\S.*)(?:\s*//.*)?', re.I)
+pattern_assingment = re.compile(r'([a-z_]\w*)\s*=\s*(\S.*)(?:\s*//.*)?', re.I)
 
-    repattern_number = re.compile(r'(?:0x[0-9a-f]+|0o[0-7]+|0b[01]+)|(?:\d*\.)?\d+', re.I)
+repattern_number = re.compile(r'(?:0x[0-9a-f]+|0o[0-7]+|0b[01]+)|(?:\d*\.)?\d+', re.I)
 
-    repattern_variale = re.compile(r'[a-z_]\w*', re.I)
+repattern_variale = re.compile(r'[a-z_]\w*', re.I)
 
+repattern_operation = re.compile(r'(\S.*)\s*([^\s\w]{1,2})\s*(\S.*)', re.I) # NOTE: doesn't support word operators like 'and', 'or'
 
+def match(line):
+    line = line.strip()
+    match = pattern_comment.fullmatch(line)
+    if (match):
+        return 
+    
+    match = pattern_var_def_decl.fullmatch(line)
+    if (match):
+        return STATEMENT_DEF_DECL, match.groups()
+    
+    match = pattern_assingment.match(line)
+    if (match):
+        return STATEMENT_ASSIGNMENT, match.groups()
 
-    @staticmethod
-    def match(line):
-        line = line.strip()
-        match = Matcher.pattern_comment.fullmatch(line)
-        if (match):
-            return 
-        
-        match = Matcher.pattern_var_def_decl.fullmatch(line)
-        if (match):
-            return (STATEMENT_DEF_DECL, match.groups)
-        
-        match = Matcher.pattern_assingment.match(line)
-        if (match):
-            return (STATEMENT_ASSIGNMENT, match.groups)
+    return STATEMENT_ERROR, line
 
-        return (STATEMENT_ERROR, line)
+def rematch(any_lex):
+    any_lex = any_lex.strip()
 
-    @staticmethod
-    def rematch(relexeme):
-        relexeme = relexeme.strip()
+    if any_lex[0] == '"':  # Is a string
+        if any_lex[-1] == '"':
+            return RELEX_STR, (any_lex[1:-1])
+        else:
+            return RELEX_ERROR, "Incorrect number of quotes"
 
-        if relexeme[0] == '"':  # Is a string
-            if relexeme[-1] == '"':
-                return (RELEX_STR, relexeme[1:-1])
-            else:
-                return (RELEX_ERROR, "Incorrect number of quotes")
+    if repattern_number.fullmatch(any_lex): 
+        return RELEX_NUM, any_lex
 
-        if Matcher.repattern_number.fullmatch(relexeme): 
-            return (RELEX_NUM, relexeme)
+    if repattern_variale.fullmatch(any_lex): 
+        return RELEX_VAR, any_lex
 
-        if Matcher.repattern_variale.fullmatch(relexeme): 
-            return (RELEX_VAR, relexeme)
-        
-        # TODO: match other relex...
-        ###return (RELEX_ANY_LEX, relexeme)
+    match = repattern_operation.fullmatch(any_lex)
+    if match:
+        return RELEX_OPERATION, match.groups()
 
-class Tokenizer:
-    @staticmethod
-    def def_decl(lexeme_tuple, lineN):
-        if len(lexeme_tuple) != 3:
-            raise ValueError(f"Define and declaration need 3 lexemes. LINE: {lineN}")
+    # TODO: match other relex... Function call ...
+    return RELEX_ERROR, f"Match_Error in <{any_lex}>"
+    
+    ###return (RELEX_ANY_LEX, any_lex)
+# class Matcher/
 
-        tokens = []
-        tokens.append(Token(Token_type.TYPE, lexeme_tuple[0], lineN))
-        tokens.append(Token(Token_type.VARIABLE, lexeme_tuple[1], lineN))
-        if lexeme_tuple[2]: # definition
-            tokens.append(Token(Token_type.ASSIGN_OPERATOR, '=', lineN))
+# class Tokenizer:
+def def_decl(lexeme_tuple, lineN):
+    if len(lexeme_tuple) != 3:
+        raise ValueError(f"Define and declaration needs 3 lexemes. LINE: {lineN}")
 
-            any_lex = Matcher.rematch(lexeme_tuple[3])
-            tokens.extend(Tokenizer.retokenize(any_lex, lineN))
-
-        return tokens
-            
- 
-    @staticmethod 
-    def assignment(lexeme_tuple, lineN):
-        if len(lexeme_tuple) != 3:
-            raise ValueError(f"Assignment need 2 lexemes. LINE: {lineN}")
-        tokens = []
-        tokens.append(Token(Token_type.VARIABLE, lexeme_tuple[0], lineN))
+    tokens = []
+    tokens.append(Token(Token_type.TYPE, lexeme_tuple[0], lineN)) # TODO: check type names
+    tokens.append(Token(Token_type.VARIABLE, lexeme_tuple[1], lineN))
+    if lexeme_tuple[2]: # definition
         tokens.append(Token(Token_type.ASSIGN_OPERATOR, '=', lineN))
 
-        any_lex = Matcher.rematch(lexeme_tuple[3])
-        tokens.extend(Tokenizer.retokenize(any_lex, lineN))
+        relex_type, relex_tuple = rematch(lexeme_tuple[2])
+        retokens = retokenize(relex_type, relex_tuple, lineN)
 
-    @staticmethod
-    def stmnt_error(line_content, lineN):
-        return [Token(Token_type.ERROR, f"Match_Error in <{line_content}>", lineN)]
+        if type(retokens) is list:
+            tokens.extend(retokens)
+        else:
+            tokens.append(retokens)
 
-    statement_types = {
-        STATEMENT_DEF_DECL: def_decl, # type var; type var = val
-        STATEMENT_ASSIGNMENT: assignment,
-        STATEMENT_ERROR: stmnt_error,
-    }
+    return tokens
+        
+def assignment(lexeme_tuple, lineN):
+    if len(lexeme_tuple) != 2:
+        raise ValueError(f"Assignment needs 2 lexemes. LINE: {lineN}")
+    tokens = []
+    tokens.append(Token(Token_type.VARIABLE, lexeme_tuple[0], lineN))
+    tokens.append(Token(Token_type.ASSIGN_OPERATOR, '=', lineN))
+
+    relex_type, relex_tuple = rematch(lexeme_tuple[1])
+    retokens = retokenize(relex_type, relex_tuple, lineN)
+
+    if type(retokens) is list:
+        tokens.extend(retokens)
+    else:
+        tokens.append(retokens)
+    
+    return tokens
+
+def stmnt_error(line_content, lineN):
+    return [Token(Token_type.ERROR, f"Match_Error in <{line_content}>", lineN)]
+
+statement_types = {
+    STATEMENT_DEF_DECL: def_decl, # type var; type var = val
+    STATEMENT_ASSIGNMENT: assignment,
+    STATEMENT_ERROR: stmnt_error,
+}
+
+def operation(relexeme_tuple, lineN):
+    if len(relexeme_tuple) != 3:
+        raise ValueError(f"Operation needs 3 lexemes. LINE: {lineN}")
+    tokens = []
+    relex_type, relex_tuple = rematch(relexeme_tuple[0])
+    retokens = retokenize(relex_type, relex_tuple, lineN)
+
+    if type(retokens) is list:
+        tokens.extend(retokens)
+    else:
+        tokens.append(retokens)
+
+    tokens.append(Token(Token_type.ARITHMETIC_OPERATOR, relexeme_tuple[1], lineN)) # TODO: check all operand types
+
+    relex_type, relex_tuple = rematch(relexeme_tuple[2])
+    retokens = retokenize(relex_type, relex_tuple, lineN)
+
+    if type(retokens) is list:
+        tokens.extend(retokens)
+    else:
+        tokens.append(retokens)
+
+    return tokens
 
 
-    @staticmethod
-    def tokenize(lexeme_tuple, statement_type, lineN):
-        pass
+relex_types = {
+    RELEX_STR: lambda lexeme, lineN: Token(Token_type.STRING, lexeme, lineN),
+    RELEX_NUM: lambda lexeme, lineN: Token(Token_type.NUMBER, lexeme, lineN),
+    RELEX_VAR: lambda lexeme, lineN: Token(Token_type.VARIABLE, lexeme, lineN),
+    RELEX_ERROR:  lambda lexeme, lineN: Token(Token_type.ERROR, lexeme, lineN),
+    RELEX_OPERATION: operation,
+    # RELEX_FUNC_CALL:
+    # RELEX_FUNC_DECL:
+    # RELEX_ANY_LEX:
+}
 
-    @staticmethod 
-    def retokenize(any_lex, lineN):
-        pass
 
+def tokenize(statement_type, lexeme_tuple, lineN):
+    return statement_types[statement_type](lexeme_tuple, lineN)
+
+def retokenize(relex_type, relex_tuple, lineN):
+    return relex_types[relex_type](relex_tuple, lineN)
+
+# class Tokenizer/
 
 token_types = [
     # Operators
@@ -224,7 +272,12 @@ close_brackets = {
 }
 
 
-
+if __name__ == '__main__':
+    example = "char[] str = \"string\""
+    statement_type, lexeme_tuple = match(example)
+    tokens = tokenize(statement_type, lexeme_tuple, 1)
+    for i in tokens:
+        print(i)
 
 
 
