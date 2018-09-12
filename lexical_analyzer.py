@@ -19,9 +19,11 @@ class Matcher:
     # You have to check the right site of the assignment too.
     paterm_assingment = re.compile(r'(\w+)\s*=\s*([^\s].*)(?:\s*\\.*)?$')
 
-    paterm_control = re.compile(r'(})?(if|while|else|elif)\s*(\((.*)\))*\s*{(?:\s*\/\/.*)? $')
+    paterm_control = re.compile(r'(})?(if|while|else|elif)\s*(\((\S.*)\))*\s*{(?:\s*\/\/.*)? $')
 
-    paterm_function = re.compile(r'func\s*(\w+)\s*\((.*)\)\s*:\s*(\w+)\s*{$') #TODO: function name has to be numbers and letters
+    paterm_function_declaration = re.compile(r'func\s*(\D\w+)\s*\((\S.*)\)\s*:\s*(\w+)\s*{$') 
+
+    paterm_function_call = re.compile(r'(\D\w*)\s*\((.*)\)$')
 
 class Tokenizer:
     def def_decl(self, lexeme_tuple, lineN):
@@ -56,18 +58,26 @@ class Tokenizer:
             tokens.append(Token(Token_type.BRACKET, '(', lineN))        
             #tokens.append(rematch(lexeme_tuple[0], lineN))
             tokens.append(Token(Token_type.BRACKET, ')', lineN))
-    def func(self, lexeme_tuple, lineN):
+    def func_declaration(self, lexeme_tuple, lineN):
         tokens = []
-        tokens.append(Token(Token_type.RESERVED_WORD, lexeme_tuple[0], lineN))#func
-        tokens.append(Token(Token_type.RESERVED_WORD, lexeme_tuple[1], lineN))#func name
+        tokens.append(Token(Token_type.FUNCTION_DECLARATION, lexeme_tuple[0], lineN))#func
+        tokens.append(Token(Token_type.FUNCTION_CALL, lexeme_tuple[1], lineN))#func name
         tokens.append(Token(Token_type.BRACKET, '(', lineN))
         #tokens.append(rematch(lexeme_tuple[2], lineN))
         tokens.append(Token(Token_type.BRACKET, ')', lineN))
-        #tokens.append(Token(Token_type.BRACKET, ':', lineN)) # TODO: define : type
+        tokens.append(Token(Token_type.FUNCTION_OPERATOR, ':', lineN)) 
         if len(lexeme_tuple) == 4:
             tokens.append(Token(Token_type.TYPE, lexeme_tuple[3], lineN))
         tokens.append(Token(Token_type.BRACKET, '{', lineN))
         
+    def func_call(self,lexeme_tuple,lineN):
+        tokens = []
+        tokens.append(Token(Token_type.FUNCTION_CALL, lexeme_tuple[0], lineN))#func name
+        tokens.append(Token(Token_type.BRACKET, '(', lineN))
+        #tokens.append(rematch(lexeme_tuple[1], lineN))
+        tokens.append(Token(Token_type.BRACKET, ')', lineN))
+        
+
     statement_types = {
         'DECLARATION': def_decl, # type var
         'DEFINITION': def_decl,  # type var = val
@@ -85,10 +95,13 @@ token_types = [
     'ARITHMETIC_OPERATOR',
     'COMPARATION_OPERATOR',
     'BOOLEAN_OPERATOR',
+    'FUNCTION_OPERATOR'
     
     # Reserved words
     'TYPE',
     'CONTROL_STRUCT',
+    'FUNCTION_DECLARATION',
+    'FUNCTION_CALL', 
     'RESERVED_WORD', # Other reserver words
     
     # Variables and values
@@ -129,6 +142,10 @@ reserved_words.update(bool_operators_words)
 
 assign_operators = {
     '='
+}
+
+funtion_operators = {
+    ':'
 }
 
 arithm_operators = {
