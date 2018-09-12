@@ -21,7 +21,7 @@ An `any_lex` needs to be reevaluated (matcher and tokenizer), after evaluation i
 * **Function call:** needs to be **reevaluated**.
 * ...
 
-### Evaluation algorith
+### Evaluation algorithm
 
 Already we have two methods that are used in the lexical analyzer: `match` and `tokenize`.
 Another two methods need to be implemented `rematch` and `retokenize`.
@@ -63,24 +63,24 @@ def retokenize(relexemes, ...):
 
 `int x = func("str", var) * 33`
 
-1. First match
+1. First match  
    `DEFINITION: <int> <x> <func("str", var) * 33>`
 
-2. Tokenize
-  `(TYPE, int) (VAR, int) (ASSIGNMENT, '=') <func("str", var) * 33>` 
+2. Tokenize  
+  `(TYPE, int) (VAR, int) (ASSIGNMENT, '=') <func("str", var) * 33>`   
   The last part needs to be rematched
 
-3. Rematch
-   In :  `func("str", var) * 33`
+3. Rematch  
+   In :  `func("str", var) * 33`  
    Out `OPERATION: <func("str", var)> <*> <33>`
 
-4. Retokenize
-   `<func("str", var)> (OPERATOR, '*') (NUMBER, 33)`  
+4. Retokenize  
+   `<func("str", var)> (OPERATOR, '*') (NUMBER, 33)`    
    the first part needs to be rematched
 
-5. Rematch
-   In :  `func("str", var)`
-   Out `FUNCTION_CALL: <func> <"str"> <var>`
+5. Rematch  
+   In :  `func("str", var)`  
+   Out `FUNCTION_CALL: <func> <"str"> <var>`  
 
-6. Rematch
+6. Rematch  
   `(FUNCTION_CALL, func) (BRACKET, '(') (STRING, str) (VAR, var) (BRACKET, ')') `
