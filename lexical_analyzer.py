@@ -9,16 +9,12 @@ class Token:
 
 class Matcher:
     # After this you have to check the right side of the declaration.
-<<<<<<< HEAD
     pattern_var_def_decl = re.compile(r'(\w+(?:\[\])?)\s+(\w+)(?:\s*=\s*(".*"|\d+|[\D\w][\w]*))?(?:\s*\\.*)?$')
     # TODO: this is not right, the right part of the '=' can be:
     # variable, number, string
     # operation: a + b, x - y, ...
     # When this part is an operation, it can contains blank spaces, otherwise not.
     
-=======
-    pattern_var_def_decl = re.compile(r'(\w+(?:\[\])?)\s+(\w+)(?:\s*=\s*([^s].*))?(?:\s*\\.*)?$')
->>>>>>> 45bb73becb7daad4838787d9f794e10a8158f3ed
 
     # You have to check the right site of the assignment too.
     paterm_assingment = re.compile(r'(\w+)\s*=\s*([^\s].*)(?:\s*\\.*)?$')
