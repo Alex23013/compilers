@@ -36,7 +36,7 @@ if (something) {
 ```
 
 ```
-else (something) {
+else {
   ...
 }
 ```
