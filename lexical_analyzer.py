@@ -5,6 +5,10 @@ import pprint
 STATEMENT_DEF_DECL = 'DEF_DECL'
 STATEMENT_ASSIGNMENT = 'ASSIGNMENT'
 STATEMENT_ERROR = 'ERROR'
+STATEMENT_CONDITION = 'CONDITION'
+STATEMENT_ELSE = 'ELSE'
+STATEMENT_ELIF = 'ELIF'
+STATEMENT_CLOSED_CURLY = 'CLOSED_CURLY'
 
 RELEX_STR = 'STRING'
 RELEX_NUM = 'NUMBER'
@@ -37,7 +41,13 @@ pattern_var_def_decl = re.compile(r'([a-z_]\w*(?:\[\])?)\s+([a-z_]\w*)(?:\s*=\s*
 
 pattern_assingment = re.compile(r'([a-z_]\w*)\s*=\s*(\S.*)(?:\s*//.*)?', re.I)
 
-pattern_control = re.compile(r'(})?(if|while|else|elif)\s*(\((\S.*)\))*\s*{(?:\s*\/\/.*)?$')
+pattern_control = re.compile(r'(if|while)\s*\((\S.*)\)\s*{(?:\s*//.*)?')
+
+patter_condition = re.compile(r'(if|while)\s*\((\S.*)\)\s*{(?:\s*//.*)?')
+pattern_elif = re.compile(r'(})?elif\s*\((\S.*)\)\s*{(?:\s*//.*)?')
+pattern_else = re.compile(r'(})?else\s*{(?:\s*//.*)?')
+pattern_closed_curly_bracket = re.compile(r'}\s*(?:\s*//.*)?')
+
 
 pattern_function_declaration = re.compile(r'func\s*(\D\w+)\s*\((\S.*)\)\s*:\s*(\w+)\s*{$') 
 
@@ -52,16 +62,32 @@ repattern_operation = re.compile(r'(\S.*)\s*([^\s\w]{1,2})\s*(\S.*)', re.I) # NO
 def match(line):
     line = line.strip()
     match = pattern_comment.fullmatch(line)
-    if (match):
+    if match:
         return 
     
     match = pattern_var_def_decl.fullmatch(line)
-    if (match):
+    if match:
         return STATEMENT_DEF_DECL, match.groups()
     
     match = pattern_assingment.match(line)
-    if (match):
+    if match:
         return STATEMENT_ASSIGNMENT, match.groups()
+
+    match = pattern_condition.fullmatch(line)
+    if match:
+        return STATEMENT_CONDITION, match.groups()
+
+    match = pattern_else.fullmatch(line)
+    if match:
+        return STATEMENT_ELSE, match.groups()
+    
+    match = pattern_elif.fullmatch(line)
+    if match:
+        return STATEMENT_ELIF, match.groups()
+
+    match = pattern_closed_curly_bracket.fullmatch(line)
+    if match:
+        return STATEMENT_CLOSED_CURLY, match.groups()
 
     return STATEMENT_ERROR, line
 
@@ -70,7 +96,7 @@ def rematch(any_lex):
 
     if any_lex[0] == '"':  # Is a string
         if any_lex[-1] == '"':
-            return RELEX_STR, (any_lex[1:-1])
+            return RELEX_STR, any_lex[1:-1]
         else:
             return RELEX_ERROR, "Incorrect number of quotes"
 
@@ -129,7 +155,7 @@ def assignment(lexeme_tuple, lineN):
     
     return tokens
 
-def control(self, lexeme_tuple, lineN):
+def control(lexeme_tuple, lineN):
     tokens = []
     if lexeme_tuple[0] == '}': # else |elif
         tokens.append(Token(Token_type.BRACKET, lexeme_tuple[0], lineN))
@@ -140,7 +166,7 @@ def control(self, lexeme_tuple, lineN):
         #tokens.append(rematch(lexeme_tuple[0], lineN))
         tokens.append(Token(Token_type.BRACKET, ')', lineN))
 
-def func_declaration(self, lexeme_tuple, lineN):
+def func_declaration(lexeme_tuple, lineN):
     tokens = []
     tokens.append(Token(Token_type.FUNCTION_DECLARATION, lexeme_tuple[0], lineN))#func
     tokens.append(Token(Token_type.FUNCTION_CALL, lexeme_tuple[1], lineN))#func name
@@ -152,7 +178,7 @@ def func_declaration(self, lexeme_tuple, lineN):
         tokens.append(Token(Token_type.TYPE, lexeme_tuple[3], lineN))
     tokens.append(Token(Token_type.BRACKET, '{', lineN))
     
-def func_call(self, lexeme_tuple, lineN):
+def func_call(lexeme_tuple, lineN):
     tokens = []
     tokens.append(Token(Token_type.FUNCTION_CALL, lexeme_tuple[0], lineN))#func name
     tokens.append(Token(Token_type.BRACKET, '(', lineN))
@@ -161,13 +187,45 @@ def func_call(self, lexeme_tuple, lineN):
     
 
 def stmnt_error(line_content, lineN):
-    return [Token(Token_type.ERROR, f"Match_Error in <{line_content}>", lineN)]
+    return Token(Token_type.ERROR, f"Match_Error in <{line_content}>", lineN)
+
+def condition(lexeme_tuple, lineN):
+    tokens = []
+    tokens.append(Token(Token_type.CONTROL_STRUCT, lexeme_tuple[0], lineN))
+
+    relex_type, relex_tuple = rematch(lexeme_tuple[1])
+    retokens = retokenize(relex_type, relex_tuple, lineN)
+
+    if type(retokens) is list:
+        tokens.extend(retokens)
+    else:
+        tokens.append(retokens)
+    
+    return tokens
+
+def condition_else(lexeme_tuple, lineN):
+def condition_elif(lexeme_tuple, lineN):
+def closed_curly(lexeme_tuple, lineN):
+
+
 
 statement_types = {
     STATEMENT_DEF_DECL: def_decl, # type var; type var = val
     STATEMENT_ASSIGNMENT: assignment,
     STATEMENT_ERROR: stmnt_error,
+    STATEMENT_CONDITION: condition,
+    STATEMENT_ELSE: condition_else,
+    STATEMENT_ELIF: condition_elif,
+    STATEMENT_CLOSED_CURLY: closed_curly,
 }
+
+
+patter_condition = re.compile(r'(if|while)\s*\((\S.*)\)\s*{(?:\s*//.*)?')
+pattern_elif = re.compile(r'(})?elif\s*\((\S.*)\)\s*{(?:\s*//.*)?')
+pattern_else = re.compile(r'(})?else\s*{(?:\s*//.*)?')
+pattern_closed_curly_bracket = re.compile(r'}\s*(?:\s*//.*)?')
+
+
 
 def operation(relexeme_tuple, lineN):
     if len(relexeme_tuple) != 3:
@@ -319,7 +377,7 @@ close_brackets = {
 
 
 if __name__ == '__main__':
-    example = "char[] str = \"string\""
+    example = "char[] str = 1 + var - x * 123"
     statement_type, lexeme_tuple = match(example)
     tokens = tokenize(statement_type, lexeme_tuple, 1)
     for i in tokens:
