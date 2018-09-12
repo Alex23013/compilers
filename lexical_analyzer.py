@@ -9,18 +9,35 @@ class Token:
 
 class Matcher:
     # After this you have to check the right side of the declaration.
-    pattern_var_def_decl = re.compile(r'(\w+(?:\[\])?)\s+(\w+)(?:\s*=\s*([^s].*))?$')
+    pattern_var_def_decl = re.compile(r'(\w+(?:\[\])?)\s+(\w+)(?:\s*=\s*(".*"|\d+|[\D\w][\w]*))?(?:\s*\\.*)?$')
+    # TODO: this is not right, the right part of the '=' can be:
+    # variable, number, string
+    # operation: a + b, x - y, ...
+    # When this part is an operation, it can contains blank spaces, otherwise not.
+    
 
     # You have to check the right site of the assignment too.
-    paterm_assingment = re.compile(r'(\w+)\s*=\s*([^\s].*)$')
+    paterm_assingment = re.compile(r'(\w+)\s*=\s*([^\s].*)(?:\s*\\.*)?$')
 
 class Tokenizer:
-    def def_decl(self, lexeme_tuple):
+    def def_decl(self, lexeme_tuple, lineN):
         if len(lexeme_tuple) != 3:
             raise ValueError("Define and declaration need 3 lexemes")
-        if lexeme_tuple[-1]: # definition
-            pass
 
+        tokens = []
+        tokens.append(Token(Token_type.TYPE, lexeme_tuple[0], lineN))
+        tokens.append(Token(Token_type.VARIABLE, lexeme_tuple[1], lineN))
+        if lexeme_tuple[2]: # definition
+            if lexeme_tuple[2][0] == '"': # Is a string
+                if lexeme_tuple[2][-1] == '"':
+                    tokens.append(Token(Token_type.STRING, lexeme_tuple[2][1:-1], lineN))
+                else:
+                    tokens.append(Token(Token_type.ERROR, "Incorrect number of quotes"))
+            elif lexeme_tuple[2].isdigit(): # Is a number # TODO: replace this with a regex that accepts binary, octal, hexadecimal
+                tokens.append(Token(Token_type.NUMBER, lexeme_tuple[2], lineN))
+            else: # Is a variable name
+                tokens.append(Token(Token_type.NUMBER, lexeme_tuple[2], lineN))
+            
     
     def assignment(self, lexeme_tuple):
         pass
