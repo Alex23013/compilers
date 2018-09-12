@@ -9,10 +9,10 @@ class Token:
 
 class Matcher:
     # After this you have to check the right side of the declaration.
-    pattern_var_def_decl = re.compile(r'(\w+(?:\[\])?)\s+(\w+)(?:\s*=\s*([^s].*))?$')
+    pattern_var_def_decl = re.compile(r'(\w+(?:\[\])?)\s+(\w+)(?:\s*=\s*([^s].*))?(?:\s*\\.*)?$')
 
     # You have to check the right site of the assignment too.
-    paterm_assingment = re.compile(r'(\w+)\s*=\s*([^\s].*)$')
+    paterm_assingment = re.compile(r'(\w+)\s*=\s*([^\s].*)(?:\s*\\.*)?$')
 
 class Tokenizer:
     def def_decl(self, lexeme_tuple):
