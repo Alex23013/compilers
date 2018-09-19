@@ -3,7 +3,7 @@
 `<type>` → int | float | void | string
 
 ### Variables
-`<var_declaration>` → `<var>` | `<var>` `<assign_operators>` `<any_lex>`  
+`<var_declaration>` → `<var>` | `<var>` = `<any_lex>`  
 `<var>` → `<type>` `<name>` | `<name>`  
 
 
@@ -27,22 +27,21 @@
 `<list_instructions>` → `<instructions>` | `<instructions>``<instructions>` | E  
 `<instructions>`→ `<control_instructions>` | `<var_declaration>` | `<function_definition>` | `<array_declaration>`
 `<list_any_lex>` → `<any_lex>` | `<list_any_lex>` , `<list_any_lex>` | E  
-`<any_lex>` → TODO:  
+`<any_lex>` → `<var>` | `<number>` | `<string>` | `<operation>` | `<function_call>` 
+`<operation>` → `<id>` `<arithm_operators>` `<id>` | `<var>` `<double_operators>` 
 
 `<id>` → `<var>` | `<number>`   
 `<name>` → (`<letter>` | `<name_symbols>`) | (`<letter>` | `<name_symbols>`)(`<word>` | `<number>` | `<name_symbols>`)  
+`<string>` → (`<word>` | `<number>` | `<name_symbols>`)
 `<word>` → `<letter>` | `<letter><letter>`  
 `<number>` → `<digit>` | `<digit><digit>`   
 
 ### Operators:
-`<bool_operators_words>` → and | or | not  
-
-`<assign_operators>` → =  
-`<funtion_operators>` → :  
 `<arithm_operators>` → + | - | * | / | ^  
 `<double_operators>` → ++ | -- | *= | +=  
-`<comp_operators>` → == | != | < | > | <= | >=  | `<bool_operators>`  
+`<comp_operators>` → == | != | < | > | <= | >=  | `<bool_operators>` | `<bool_operators_words>`
 `<bool_operators>` → && | || | !  
+`<bool_operators_words>` → and | or | not  
 
 ### Terminals:
 `<name_symbols>` →  _   
