@@ -27,7 +27,8 @@
 `<list_instructions>` → `<instructions>` | `<instructions>``<instructions>` | E  
 `<instructions>`→ `<control_instructions>` | `<var_declaration>` | `<function_definition>` | `<array_declaration>`
 `<list_any_lex>` → `<any_lex>` | `<list_any_lex>` , `<list_any_lex>` | E  
-`<any_lex>` → `<var>` | `<number>` | `<string>` | `<operation>` | `<function_call>` 
+`<any_lex>` → `<var>` | `<number>` | `<string>` | `<operation>` | `<function_call>`
+
 `<operation>` → `<id>` `<arithm_operators>` `<id>` | `<var>` `<double_operators>` 
 
 `<id>` → `<var>` | `<number>`   
