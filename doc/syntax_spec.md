@@ -4,20 +4,13 @@
 ```
 type name
 type name = value
-char name = "a"
+string name = "a"
 ```
 
 ### Array:
 ```
 type[] name 
 type[] name = [value, value, value, ...]
-```
-
-### String
-```
-char[] name
-char[] name = "value"
-char[] name = ["v","a","l", ...]
 ```
 
 ### Function
@@ -31,6 +24,12 @@ func name(type name, type name, ...) : return_type {
 ### Control
 ```
 if (something) {
+  ...
+}
+```
+
+```
+elif (something) {
   ...
 }
 ```

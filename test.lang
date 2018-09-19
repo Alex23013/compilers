@@ -1,5 +1,6 @@
 string  i = "algo"
 int name = 123
+float b = 10.0
 int other = 0x123abcdef
 
 something = 0b0101010
@@ -18,3 +19,9 @@ func something(int one, string two, float tree) : void {
 }
 
 something( "one string" , "another string", a + b, b+c)
+
+a + b
+a++
+if (a < b){}
+else {}
+elif (a >= b)
