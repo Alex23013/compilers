@@ -32,7 +32,7 @@
 `<operation>` → `<id>` `<arithm_operators>` `<id>` | `<var>` `<double_operators>` 
 
 `<id>` → `<var>` | `<number>`   
-`<name>` → (`<letter>` | `<name_symbols>`) | (`<letter>` | `<name_symbols>`)(`<word>` | `<number>` | `<name_symbols>`)  
+`<name>` → (`<letter>` | `<name_symbols>`) | (`<letter>` | `<name_symbols>`)(`<word>` | `<int>` | `<name_symbols>`)  
 `<string>` → (`<word>` | `<number>` | `<name_symbols>`)
 `<word>` → `<letter>` | `<letter><letter>`
 
