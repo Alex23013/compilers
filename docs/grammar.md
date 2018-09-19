@@ -1,4 +1,5 @@
 ## Free Context Grammar
+`<program>`→ `<list_instructions>`  
 `<type>` → int | float | void | string
 
 ### Variables
@@ -17,12 +18,14 @@
 `<function_decl>` → `<name>` ( `<list_any_lex>` )  
 
 ### Control
+`<control_instructions>` → `<if>` | `<elif>` | `<else>` 
 `<if>` → if (`<id>` `<comp_operators>` `<id>`){`<list_instructions>`}  
 `<elif>` → elif (`<id>` `<comp_operators>` `<id>`){`<list_instructions>`}  
 `<else>` → else{ `<list_instructions>` }  
 
 ### Values:
 `<list_instructions>` → `<instructions>` | `<instructions>``<instructions>` | E  
+`<instructions>`→ `<control_instructions>` | `<var_declaration>` | `<function_definition>` | `<array_declaration>`
 `<list_any_lex>` → `<any_lex>` | `<list_any_lex>` , `<list_any_lex>` | E  
 `<any_lex>` → TODO:  
 
