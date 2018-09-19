@@ -28,8 +28,8 @@
 
 `<id>` → `<var>` | `<number>`   
 `<name>` → (`<letter>` | `<name_symbols>`) | (`<letter>` | `<name_symbols>`)(`<word>` | `<number>` | `<name_symbols>`)  
-`<word>` → `<letter>` | `<letter>``<letter>`  
-`<number>` → `<digit>` | `<digit>``<digit>`   
+`<word>` → `<letter>` | `<letter><letter>`  
+`<number>` → `<digit>` | `<digit><digit>`   
 
 ### Operators:
 `<bool_operators_words>` → and | or | not  
