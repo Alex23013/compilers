@@ -1,0 +1,5 @@
+int a = 0
+float b = 10.0
+a + b
+a++
+if a < b :
