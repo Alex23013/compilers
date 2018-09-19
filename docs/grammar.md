@@ -35,8 +35,11 @@
 `<name>` → (`<letter>` | `<name_symbols>`) | (`<letter>` | `<name_symbols>`)(`<word>` | `<number>` | `<name_symbols>`)  
 `<string>` → (`<word>` | `<number>` | `<name_symbols>`)
 `<word>` → `<letter>` | `<letter><letter>`
+
 `<number>` → `<int>`  | `<float>`  
+
 `<int>` → `<digit>` | `<digit><int>`
+
 `<float>` → `<int>`.`<int>`
 
 ### Operators:
