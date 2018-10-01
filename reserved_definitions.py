@@ -6,7 +6,7 @@ token_types = [
     'ARITHMETIC_OPERATOR',
     'COMPARATION_OPERATOR',
     'BOOLEAN_OPERATOR',
-    'COMPOSITE_OPERATOR',
+    'ASSIGN_ESP_OPERATORS',
     'FUNCTION_OPERATOR',
     'COMMA',
 
@@ -60,9 +60,7 @@ arithm_operators = [
     '/',
     '^',  # right associative
 ]
-composite_operators = [
-    '++',
-    '--',
+assign_esp_operators = [
     '+=',
     '-=',
     '*=',
@@ -95,7 +93,7 @@ comma_symb = [
     ','
 ]
 comment_symb = [
-    '//'
+    '#'
 ]
 
 all_reserved = {}
@@ -107,7 +105,7 @@ all_reserved.update((i, Token_type.BOOLEAN_OPERATOR) for i in bool_operators)
 all_reserved.update((i, Token_type.BOOLEAN_OPERATOR) for i in bool_operators_words)
 all_reserved.update((i, Token_type.FUNCTION_OPERATOR) for i in function_operators)
 all_reserved.update((i, Token_type.CONTROL_WORD) for i in control_words)
-all_reserved.update((i, Token_type.COMPOSITE_OPERATOR) for i in composite_operators)
+all_reserved.update((i, Token_type.ASSIGN_ESP_OPERATORS) for i in assign_esp_operators)
 all_reserved.update((i, Token_type.OPEN_BRACKET) for i in open_brackets)
 all_reserved.update((i, Token_type.CLOSE_BRACKET) for i in close_brackets)
 all_reserved.update((i, Token_type.COMMA) for i in comma_symb)

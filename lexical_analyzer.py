@@ -21,6 +21,8 @@ pattern_comment = re.compile(r'//.*')
 
 patter_number = re.compile(
     r'(?:0x[0-9a-f]+|0o[0-7]+|0b[01]+)|(?:\d*\.)?\d+', re.I)
+    # TODO: generalizar lo que está dentro de [] y verificar que solo
+    # tenga los valores apropiados luego de reconocerlo como "número"
 pattern_valid_name = re.compile(r'[a-z_]\w*', re.I)
 
 pattern_split = re.compile(r'(\W+)')
@@ -87,7 +89,7 @@ def main():
     tokens = []
     with open(filepath) as file:
         for lineN, lineVal in enumerate(file):
-            res = tokenize(pattern_split.split(lineVal.strip()), lineN)
+            res = tokenize(pattern_split.split(lineVal.strip()), lineN + 1)
             print(pattern_split.split(lineVal))
             tokens.extend(res)
 

@@ -18,9 +18,10 @@
                  | <NAME> = [ `list_any_lex` ]
 
 ### Function:
-`function_def` → `type`  <NAME> ( `list_var_decl` ) : `type` { `list_instructions` return `list_any_lex` }   
+`function_def` → func <NAME> ( `list_var_decl` ) : `type` { `list_instructions` return `any_lex` }   
+               | func <NAME> ( `list_var_decl` ) : void { `list_instructions` }   
 `function_call` → <NAME> ( `list_any_lex` )   
-`function_decl` → <NAME> ( `list_any_lex` ) : `type`  
+`function_decl` → <NAME> ( `list_var_decl` ) : `type`  
 
 ### Control
 `control_instructions` → `if` | `while`   
@@ -35,15 +36,13 @@
 
 ### Values:
 `list_instructions` → `instructions` 
-                    | `instructions` `instructions` 
-                    | E   
+                    | `instructions` `list_instructions` 
 
 `instructions`→ `control_instructions` 
               | `var_decl`
               | `var_def` 
               | `function_def` 
               | `array_decl_def`  
-              | `inplace_operation`
 
 `list_any_lex` → `any_lex` 
                | `any_lex` , `list_any_lex` 
@@ -57,7 +56,6 @@
 
 `operation` → `value` `arithm_operators` `value` 
             | - `value`
-`inplace_operation` → <NAME> `double_operators` 
 
 `bool_operation` → `bool_operation` `comp_operators` `bool_operation`
                  | `bool_operation` `bool_operators` `bool_operation`
@@ -71,7 +69,6 @@
 
 ### Operators:
 `arithm_operators` → + | - | * | / | ^   
-`double_operators` → ++ | -- 
 `assign_esp_operators` → += | -= | *= | /= 
 `comp_operators` → == | != | < | > | <= | >= 
 `bool_operators` → && | || | and | or
