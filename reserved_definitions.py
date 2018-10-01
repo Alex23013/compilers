@@ -63,9 +63,10 @@ arithm_operators = [
 composite_operators = [
     '++',
     '--',
-    '*=',
     '+=',
     '-=',
+    '*=',
+    '\=',
 ]
 comp_operators = [
     '==',

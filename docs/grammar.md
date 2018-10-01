@@ -1,49 +1,81 @@
 ## Free Context Grammar
-`<program>`→ `<list_instructions>`   
-`<type>` → int | float | void | string  
+`program`→ `list_instructions`   
+`type` → int | float | void | string  
 
 ### Variables
-`<var_declaration>` → `<var>` | `<var>` = `<any_lex>`   
-`<var>` → `<type>` `<name>` | `<name>`   
+`var_decl` → `type` <NAME>
+`var_def` → `type` <NAME> = `any_lex`
+          | <NAME> = `any_lex`  
+          | <NAME> `assign_esp_operators` `any_lex`
 
+`list_var_decl` → `var_decl` 
+                | `var_decl`, `list_var_decl` 
+                | E
 
 ### Array:
-`<array_declaration>` → `<type>` [] `<name>`  
-       | `<type>` [] `<name>` `<assign_operators>` [ `<list_any_lex>` ]
+`array_decl_def` → `type` [] <NAME> 
+                 | `type` [] <NAME> = [ `list_any_lex` ]
+                 | <NAME> = [ `list_any_lex` ]
 
 ### Function:
-`<function_definition>` → `<type>`  `<name>` ( `<list_any_lex>` ) : `<type>` { `<list_instructions>` return `<list_any_lex>` }   
-`<function_call>` → `<name>` ( `<list_any_lex>` )   
-`<function_decl>` → `<name>` ( `<list_any_lex>` )   
+`function_def` → `type`  <NAME> ( `list_var_decl` ) : `type` { `list_instructions` return `list_any_lex` }   
+`function_call` → <NAME> ( `list_any_lex` )   
+`function_decl` → <NAME> ( `list_any_lex` ) : `type`  
 
 ### Control
-`<control_instructions>` → `<if>` | `<elif>` | `<else>`   
-`<if>` → if (`<id>` `<comp_operators>` `<id>`){`<list_instructions>`}   
-`<elif>` → elif (`<id>` `<comp_operators>` `<id>`){`<list_instructions>`}   
-`<else>` → else{ `<list_instructions>` }   
+`control_instructions` → `if` | `while`   
+
+`if` → if (`bool_operation`) { `list_instructions` } `elif`
+     | if (`bool_operation`) { `list_instructions` } `elif` else { `list_instructions`}
+`elif` → elif (`bool_operation`) { `list_instructions` } 
+       | elif (`bool_operation`) { `list_instructions` } `elif` 
+       | E  
+
+`while` → while (`bool_operation`) {`list_instructions`}
 
 ### Values:
-`<list_instructions>` → `<instructions>` | `<instructions>``<instructions>` | E   
-`<instructions>`→ `<control_instructions>` | `<var_declaration>` | `<function_definition>` | `<array_declaration>`  
-`<list_any_lex>` → `<any_lex>` | `<list_any_lex>` , `<list_any_lex>` | E   
-`<any_lex>` → `<var>` | `<number>` | `<string>` | `<operation>` | `<function_call>`  
-`<operation>` → `<id>` `<arithm_operators>` `<id>` | `<var>` `<double_operators>`  
-`<id>` → `<var>` | `<number>`    
-`<name>` → (`<letter>` | `<name_symbols>`) | (`<letter>` | `<name_symbols>`)(`<word>` | `<int>` | `<name_symbols>`)  
-`<string>` → (`<word>` | `<number>` | `<name_symbols>`)  
-`<word>` → `<letter>` | `<letter><letter>`  
-`<number>` → `<int>`  | `<float>`  
-`<int>` → `<digit>` | `<digit><int>`   
-`<float>` → `<int>`.`<int>`   
+`list_instructions` → `instructions` 
+                    | `instructions` `instructions` 
+                    | E   
+
+`instructions`→ `control_instructions` 
+              | `var_decl`
+              | `var_def` 
+              | `function_def` 
+              | `array_decl_def`  
+              | `inplace_operation`
+
+`list_any_lex` → `any_lex` 
+               | `any_lex` , `list_any_lex` 
+               | E   
+
+`any_lex` → <NAME> 
+          | <NUMBER>
+          | <STRING> 
+          | `operation` 
+          | `function_call`  
+
+`operation` → `value` `arithm_operators` `value` 
+            | - `value`
+`inplace_operation` → <NAME> `double_operators` 
+
+`bool_operation` → `bool_operation` `comp_operators` `bool_operation`
+                 | `bool_operation` `bool_operators` `bool_operation`
+                 | ! `bool_operation`
+                 | not `bool_operation`
+                 | `any_lex`
+
+`value` → <NAME> 
+        | <NUMBER> 
+        | `function_call`
 
 ### Operators:
-`<arithm_operators>` → + | - | * | / | ^   
-`<double_operators>` → ++ | -- | *= | +=   
-`<comp_operators>` → == | != | < | > | <= | >=  | `<bool_operators>` | `<bool_operators_words>`  
-`<bool_operators>` → && | || | !   
-`<bool_operators_words>` → and | or | not   
+`arithm_operators` → + | - | * | / | ^   
+`double_operators` → ++ | -- 
+`assign_esp_operators` → += | -= | *= | /= 
+`comp_operators` → == | != | < | > | <= | >= 
+`bool_operators` → && | || | and | or
 
-### Terminals:
-`<name_symbols>` →  _  
-`<letter>` → a | b | ... | z | A | B | ... | Z   
-`<digit>` → 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9     
+## Notes
+* Upper case names enclosed with '<>' are tokens.
+* Numbers, names and strings are already checked in the lexical analyzer and passed as tokens.
