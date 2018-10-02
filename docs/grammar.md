@@ -57,11 +57,13 @@
 `operation` → `value` `arithm_operators` `value` 
             | - `value`
 
-`bool_operation` → `bool_operation` `comp_operators` `bool_operation`
-                 | `bool_operation` `bool_operators` `bool_operation`
-                 | ! `bool_operation`
-                 | not `bool_operation`
-                 | `any_lex`
+`bool_operation` → ! `bool_operation` `bool_operation_P`
+                 | not `bool_operation` `bool_operation_P`
+                 | `any_lex` `bool_operation_P`
+
+`bool_operation_P` → `comp_operators` `bool_operation` `bool_operation_P`
+                   | `comp_operators` `comp_operatos` `bool_operation_P`
+                   | E
 
 `value` → <NAME> 
         | <NUMBER> 
