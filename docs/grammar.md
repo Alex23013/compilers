@@ -1,27 +1,27 @@
 ## Free Context Grammar
 `program`→ `list_instructions`   
-`type` → int | float | void | string  
+<TYPE> → int | float | void | string  
 
 ### Variables
-`var_decl` → `type` <NAME>
-`var_def` → `type` <NAME> = `any_lex`
+`var_decl` → <TYPE> <NAME>
+`var_def` → <TYPE> <NAME> = `any_lex`
           | <NAME> = `any_lex`  
-          | <NAME> `assign_esp_operators` `any_lex`
+          | <NAME> <ASSIGN_ESP_OPERATORS> `any_lex`
 
 `list_var_decl` → `var_decl` 
                 | `var_decl`, `list_var_decl` 
                 | E
 
 ### Array:
-`array_decl_def` → `type` [] <NAME> 
-                 | `type` [] <NAME> = [ `list_any_lex` ]
+`array_decl_def` → <TYPE> [] <NAME> 
+                 | <TYPE> [] <NAME> = [ `list_any_lex` ]
                  | <NAME> = [ `list_any_lex` ]
 
 ### Function:
-`function_def` → func <NAME> ( `list_var_decl` ) : `type` { `list_instructions` return `any_lex` }   
-               | func <NAME> ( `list_var_decl` ) : void { `list_instructions` }   
+`function_def` → func <NAME> ( `list_var_decl` ) : void { `list_instructions` }   
+               | func <NAME> ( `list_var_decl` ) : <TYPE> { `list_instructions` return `any_lex` }   
 `function_call` → <NAME> ( `list_any_lex` )   
-`function_decl` → <NAME> ( `list_var_decl` ) : `type`  
+`function_decl` → <NAME> ( `list_var_decl` ) : <TYPE>  
 
 ### Control
 `control_instructions` → `if` | `while`   
@@ -54,26 +54,20 @@
           | `operation` 
           | `function_call`  
 
-`operation` → `value` `arithm_operators` `value` 
+`operation` → `value` <ARITHM_OPERATORS> `value` 
             | - `value`
 
 `bool_operation` → ! `bool_operation` `bool_operation_P`
                  | not `bool_operation` `bool_operation_P`
                  | `any_lex` `bool_operation_P`
 
-`bool_operation_P` → `comp_operators` `bool_operation` `bool_operation_P`
-                   | `comp_operators` `comp_operatos` `bool_operation_P`
+`bool_operation_P` → <COMP_OPERATORS> `bool_operation` `bool_operation_P`
+                   | <COMP_OPERATORS> `bool_operation` `bool_operation_P`
                    | E
 
 `value` → <NAME> 
         | <NUMBER> 
         | `function_call`
-
-### Operators:
-`arithm_operators` → + | - | * | / | ^   
-`assign_esp_operators` → += | -= | *= | /= 
-`comp_operators` → == | != | < | > | <= | >= 
-`bool_operators` → && | || | and | or
 
 ## Notes
 * Upper case names enclosed with '<>' are tokens.
