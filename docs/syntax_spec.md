@@ -45,9 +45,3 @@ while (something) {
   ...
 }
 ```
-
-### Additional
-```
-type name1, name2, ...
-type name1 = value1, name2 = value2, ...
-```

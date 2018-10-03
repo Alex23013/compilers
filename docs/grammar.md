@@ -3,8 +3,13 @@
 <TYPE> → int | float | void | string  
 
 ### Variables
+<<<<<<< HEAD
 `var_decl` → <TYPE> <NAME>
 `var_def` → <TYPE> <NAME> = `any_lex`
+=======
+`var_decl` → `type` <NAME>      
+`var_def` → `type` <NAME> = `any_lex`
+>>>>>>> f1b49038c3fee64b3d3532893bba5df53a70403b
           | <NAME> = `any_lex`  
           | <NAME> <ASSIGN_ESP_OPERATORS> `any_lex`
 
@@ -61,8 +66,13 @@
                  | not `bool_operation` `bool_operation_P`
                  | `any_lex` `bool_operation_P`
 
+<<<<<<< HEAD
 `bool_operation_P` → <COMP_OPERATORS> `bool_operation` `bool_operation_P`
                    | <COMP_OPERATORS> `bool_operation` `bool_operation_P`
+=======
+`bool_operation_P` → `comp_operators` `bool_operation` `bool_operation_P`
+                   | `bool_operators` `bool_operation` `bool_operation_P`
+>>>>>>> f1b49038c3fee64b3d3532893bba5df53a70403b
                    | E
 
 `value` → <NAME> 
