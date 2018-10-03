@@ -31,7 +31,7 @@
        | elif (`bool_operation`) { `nfd_list_instructions` } `elif`
        | E
 
-`while` → while (`bool_operation`) {`list_instructions`}
+`while` → while (`bool_operation`) {`nfd_list_instructions`}
 
 ### Values:
 `list_instructions` → `instructions`
