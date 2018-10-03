@@ -41,6 +41,7 @@
               | `var_decl`
               | `var_def`
               | `function_def`
+              | `function_call`
               | `array_decl_def`
 
 `list_any_lex` → `any_lex`
