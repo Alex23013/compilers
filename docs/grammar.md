@@ -1,31 +1,32 @@
 ## Free Context Grammar
-`program`→ `list_instructions`   
+`program` → `list_instructions`   
 
 ### Variables
-`var_decl` → <TYPE> <NAME>
-`var_def` → <TYPE> <NAME> = `any_lex`
-          | <NAME> `var_def_P`
-`var_def_P` → = `any_lex`
-            | <ASSIGN_ESP_OPERATORS> `any_lex`
+`def_decl` → <TYPE> `def_decl_P` 
+`def_decl_P` → <NAME> `def_decl_P_var`
+             | [] <NAME> `def_decl_P_arr`
+`def_decl_P_var` → = `any_lex`
+                 | E
+`def_decl_P_arr` → = [ `list_any_lex` ]
+                 | E
 
-`list_var_decl` → `var_decl` `list_var_decl_P`
+`assign` → <NAME> = `any_lex`
+         | <NAME> = [ `list_any_lex` ]
+         | <NAME> <ASSIGN_ESP_OPERATORS> `any_lex`
+
+`list_var_decl` → <TYPE> <NAME> `list_var_decl_P`
                 | E
 `list_var_decl_P` → , `list_var_decl` 
                   | E
 
-### Array:
-`array_decl_def` → <TYPE> [] <NAME> `array_decl_def_P`
-                | <NAME> = [ `list_any_lex` ]
-
-`array_decl_def_P` → = [ `list_any_lex` ] 
+### Function:
+`func_def_decl` → func <NAME> ( `list_var_decl` ) : `func_def_decl_P`
+`func_def_decl_P` → void { `nfd_list_instructions` } 
+                  | <TYPE> `func_def_decl_P1`
+`func_def_decl_P1` → { `nfd_list_instructions` return `any_lex` }
                    | E
 
-### Function:
-`function_def` → func <NAME> ( `list_var_decl` ) : `function_def_P` 
-`function_def_P` → void { `nfd_list_instructions` } 
-                 | <TYPE> { `nfd_list_instructions` return `any_lex` }
 `function_call` → <NAME> ( `list_any_lex` )
-`function_decl` → func <NAME> ( `list_var_decl` ) : <TYPE>
 
 ### Control
 `control_instructions` → `if` 
@@ -47,22 +48,19 @@
                       | E
 
 `instructions`→ `control_instructions`
-              | `var_decl`
-              | `var_def`
-              | `function_def`
-              | `function_decl`
+              | `def_decl`
+              | `assign`
+              | `func_def_decl`
               | `function_call`
-              | `array_decl_def`
 
 `nfd_list_instructions` → `nfd_instructions` `nfd_list_instructions_P`
 `nfd_list_instructions_P` → `nfd_instructions`
                           | E 
 
 `nfd_instructions`→ `control_instructions`
-                  | `var_decl`
-                  | `var_def`
+                  | `def_decl`
+                  | `assign`
                   | `function_call`
-                  | `array_decl_def`
 
 `list_any_lex` → `any_lex` `list_any_lex_P`
                | E
