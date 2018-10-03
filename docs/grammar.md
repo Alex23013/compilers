@@ -10,9 +10,11 @@
 `def_decl_P_arr` → = [ `list_any_lex` ]
                  | E
 
-`assign` → <NAME> = `any_lex`
-         | <NAME> = [ `list_any_lex` ]
-         | <NAME> <ASSIGN_ESP_OPERATORS> `any_lex`
+`assign` → <NAME> `assign_P` 
+`assign_P` → = `assign_P1`
+           | <ASSIGN_ESP_OPERATORS> `any_lex`
+`assign_P1` → `any_lex`
+            | [ `list_any_lex` ]
 
 `list_var_decl` → <TYPE> <NAME> `list_var_decl_P`
                 | E
