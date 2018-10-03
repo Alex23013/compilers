@@ -56,7 +56,7 @@
               | `function_call`
 
 `nfd_list_instructions` → `nfd_instructions` `nfd_list_instructions_P`
-`nfd_list_instructions_P` → , `nfd_instruction_list_P`
+`nfd_list_instructions_P` → `nfd_list_instructions`
                           | E 
 
 `nfd_instructions`→ `control_instructions`
