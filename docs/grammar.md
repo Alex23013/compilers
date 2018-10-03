@@ -20,7 +20,7 @@
 `function_def` → func <NAME> ( `list_var_decl` ) : void { `list_instructions` }
                | func <NAME> ( `list_var_decl` ) : <TYPE> { `list_instructions` return `any_lex` }
 `function_call` → <NAME> ( `list_any_lex` )
-`function_decl` → <NAME> ( `list_var_decl` ) : <TYPE>
+`function_decl` → func <NAME> ( `list_var_decl` ) : <TYPE>
 
 ### Control
 `control_instructions` → `if` | `while`
