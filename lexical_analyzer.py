@@ -20,9 +20,10 @@ class Token:
 pattern_comment = re.compile(r'//.*')
 
 patter_number = re.compile(
-    r'(?:0x[0-9a-f]+|0o[0-7]+|0b[01]+)|(?:\d*\.)?\d+', re.I)
-    # TODO: generalizar lo que está dentro de [] y verificar que solo
-    # tenga los valores apropiados luego de reconocerlo como "número"
+    r'(?:0x[\da-f]+|0o[\d]+|0b[\d]+)|(?:\d+\.)?\d+', re.I)
+pattern_bin = re.compile(r'0b[01]+', re.I)
+pattern_oct = re.compile(r'0o[0-7]+', re.I)
+
 pattern_valid_name = re.compile(r'[a-z_]\w*', re.I)
 
 pattern_split = re.compile(r'(\W+)')
@@ -63,6 +64,14 @@ def tokenize(str_list, lineN):
             inString = True
             strTmp = []
         elif patter_number.fullmatch(item):
+            if item[1] == 'o' and not pattern_oct.fullmatch(item):
+                tokens.append(Token(defs.Token_type.ERROR,
+                                    f"Invalid octal number {item}", lineN))
+                continue
+            if item[1] == 'b' and not pattern_bin.fullmatch(item):
+                tokens.append(Token(defs.Token_type.ERROR,
+                                    f"Invalid binary number {item}", lineN))
+                continue
             tokens.append(Token(defs.Token_type.NUMBER, item, lineN))
         elif pattern_valid_name.fullmatch(item):
             tokens.append(Token(defs.Token_type.NAME, item, lineN))
