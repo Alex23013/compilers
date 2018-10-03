@@ -3,7 +3,7 @@
 `type` → int | float | void | string  
 
 ### Variables
-`var_decl` → `type` <NAME>
+`var_decl` → `type` <NAME>      
 `var_def` → `type` <NAME> = `any_lex`
           | <NAME> = `any_lex`  
           | <NAME> `assign_esp_operators` `any_lex`
@@ -62,7 +62,7 @@
                  | `any_lex` `bool_operation_P`
 
 `bool_operation_P` → `comp_operators` `bool_operation` `bool_operation_P`
-                   | `comp_operators` `comp_operatos` `bool_operation_P`
+                   | `bool_operators` `bool_operation` `bool_operation_P`
                    | E
 
 `value` → <NAME> 
