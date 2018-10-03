@@ -56,12 +56,12 @@
               | `function_call`
 
 `nfd_list_instructions` → `nfd_instructions` `nfd_list_instructions_P`
-`nfd_list_instructions_P` → `nfd_instructions`
+`nfd_list_instructions_P` → , `nfd_instruction_list_P`
                           | E 
 
 `nfd_instructions`→ `control_instructions`
                   | `def_decl`
-                  | `assign`
+                  | `assign` 
                   | `function_call`
 
 `list_any_lex` → `any_lex` `list_any_lex_P`
