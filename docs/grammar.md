@@ -66,7 +66,7 @@
 46.                  | `def_decl`
 47.                  | `function_call_assign`
 
-48. `function_call_assign` → <NAME> `function_call_assignP` 
+48. `function_call_assign` → <NAME> `function_call_assign_P` 
                   
 
 49. `list_any_lex` → `any_lex` `list_any_lex_P`
