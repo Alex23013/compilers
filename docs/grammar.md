@@ -10,7 +10,8 @@
 7. `def_decl_P_arr` → = [ `list_any_lex` ]
 8.                  | E
 
-9. `assign` → <NAME> `assign_P` 
+9.  `assign_BP` → `assign_P`  
+
 10. `assign_P` → = `assign_P1`
 11.            | <ASSIGN_ESP_OPERATORS> `any_lex`
 12. `assign_P1` → `any_lex`
@@ -28,7 +29,8 @@
 21. `func_def_decl_P1` → { `nfd_list_instructions` return `any_lex` }
 22.                    | E
 
-23. `function_call` → <NAME> ( `list_any_lex` )
+23. `function_call_S` → <NAME> ( `list_any_lex` ) 
+
 
 ### Control
 24. `control_instructions` → `if` 
@@ -51,9 +53,10 @@
 
 37. `instructions`→ `control_instructions`
 38.              | `def_decl`
-39.              | `assign`
+39.              | `function_call_assign`
 40.              | `func_def_decl`
-41.              | `function_call`
+
+41. `function_call_P` → ( `list_any_lex` ) 
 
 42. `nfd_list_instructions` → `nfd_instructions` `nfd_list_instructions_P`
 43. `nfd_list_instructions_P` → `nfd_list_instructions`
@@ -61,8 +64,10 @@
 
 45. `nfd_instructions`→ `control_instructions`
 46.                  | `def_decl`
-47.                  | `assign` 
-48.                  | `function_call`
+47.                  | `function_call_assign`
+
+48. `function_call_assign` → <NAME> `function_call_assignP` 
+                  
 
 49. `list_any_lex` → `any_lex` `list_any_lex_P`
 50.               | E
@@ -73,7 +78,7 @@
 54.          | <NUMBER>
 55.          | <STRING>
 56.          | `operation`
-57.          | `function_call`
+57.          | `function_call_S`
 
 58. `operation` → `value` <ARITHM_OPERATORS> `value`
 59.             | - `value`
@@ -88,7 +93,11 @@
 
 66. `value` → <NAME>
 67.         | <NUMBER>
-68.         | `function_call`
+68.         | `function_call_S`
+
+69.  `function_call_assign_P` → `function_call_P`
+70.                            | `assign_BP`
+
 
 ## Notes
 * Upper case names enclosed with '<>' are tokens.
