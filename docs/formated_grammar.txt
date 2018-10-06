@@ -1,0 +1,99 @@
+Program-> List_instructions.
+
+Def_decl_call -> type Def_decl_call_1
+               | name Def_decl_call_2.
+
+Def_decl_call_1 ->  name Def_decl_call_1_1
+                 |  _oSqr _cSqr name  Def_decl_call_1_2.
+
+Def_decl_call_1_1 -> _eq Any_lex
+                   | .
+
+Def_decl_call_1_2 -> _eq _oSqr List_any_lex _cSqr
+                   | .
+
+
+Def_decl_call_2 -> _eq Def_decl_call_2_1
+                 | assign_esp_operators Any_lex
+                 | Func_call_1.
+
+Def_decl_call_2_1 -> Any_lex
+                   | _oSqr List_any_lex _cSqr.
+
+
+List_var_decl -> type name List_var_decl_1.
+
+List_var_decl_1 -> _comma List_var_decl
+                  | .
+
+Func_def_decl -> func name ( List_var_decl ) : Func_def_decl_1.
+
+Func_def_decl_1 -> void _oCurl Nfd_list_instructions _cCurl
+                  | type Func_def_decl_2.
+
+Func_def_decl_2 -> _oCurl Nfd_list_instructions return Any_lex _cCurl
+                  | .
+
+Func_call_1 -> ( List_any_lex ).
+
+Control_instructions -> If
+                       | While.
+
+If -> if ( Bool_operation ) _oCurl Nfd_list_instructions _cCurl Elif If_1.
+
+If_1 -> else _oCurl Nfd_list_instructions_cCurl
+       | .
+
+Elif -> elif ( Bool_operation ) _oCurl Nfd_list_instructions _cCurl Elif_1
+       | .
+
+Elif_1 -> Elif.
+
+While -> while ( Bool_operation ) _oCurl Nfd_list_instructions _cCurl.
+
+List_instructions -> Instructions List_instructions_1.
+
+List_instructions_1 -> List_instructions
+                      | .
+
+Instructions-> Nfd_instructions
+              | Func_def_decl.
+
+Nfd_list_instructions -> Nfd_instructions Nfd_list_instructions_1.
+
+Nfd_list_instructions_1 -> Nfd_list_instructions
+                          | .
+
+Nfd_instructions-> Control_instructions
+                  | Def_decl_call.
+
+List_any_lex -> Any_lex List_any_lex_1
+               | .
+
+List_any_lex_1 -> _comma List_any_lex
+                 | .
+
+Any_lex -> string
+          | Operation.
+
+Operation -> Operand Operation_1.
+Operation_1 -> arithm_operators Operand Operation_1
+              | .
+Operand -> Value
+          |  _minus Value.
+            
+Bool_operation -> Comp_operation Bool_operation_1.
+Bool_operation_1 -> bool_operators Comp_operation Bool_operation_1
+                   | .
+
+Comp_operation -> Any_lex Comp_operation_1
+                 |  ! Any_lex
+                 | not Any_lex.
+
+Comp_operation_1 -> comp_operators Any_lex
+                   | .
+Value -> name Value_1
+        | number.
+
+Value_1 -> Func_call_1
+        | .
