@@ -1,114 +1,114 @@
 ## Free Context Grammar
-`program`→ `list_instructions`   
+1. `program`→ `list_instructions`   
 
 ### Variables
-`def_decl_call` → <TYPE> `def_decl_call_1`
-               | <NAME> `def_decl_call_2`
+2. `def_decl_call` → <TYPE> `def_decl_call_1`
+3.               | <NAME> `def_decl_call_2`
 
-`def_decl_call_1` →  <NAME> `def_decl_call_1_1`
-                 |  [] <NAME>  `def_decl_call_1_2`
+4. `def_decl_call_1` →  <NAME> `def_decl_call_1_1`
+5.                 |  [] <NAME>  `def_decl_call_1_2`
 
-`def_decl_call_1_1` → = `any_lex`
-                   | E
+6. `def_decl_call_1_1` → = `any_lex`
+7.                   | E
 
-`def_decl_call_1_2` → = [ `list_any_lex` ] 
-                   | E
-
-
-`def_decl_call_2` → = `def_decl_call_2_1`
-                 | <ASSIGN_ESP_OPERATORS> `any_lex`
-                 | `func_call_1`
-
-`def_decl_call_2_1` → `any_lex`
-                   | [ `list_any_lex` ]
+8. `def_decl_call_1_2` → = [ `list_any_lex` ] 
+9.                   | E
 
 
-`list_var_decl` → <TYPE> <NAME> `list_var_decl_1`
+10. `def_decl_call_2` → = `def_decl_call_2_1`
+11.                  | <ASSIGN_ESP_OPERATORS> `any_lex`
+12.                 | `func_call_1`
 
-`list_var_decl_1` → , `list_var_decl`
-                  | E
+13. `def_decl_call_2_1` → `any_lex`
+14.                    | [ `list_any_lex` ]
+
+
+15. `list_var_decl` → <TYPE> <NAME> `list_var_decl_1`
+
+16. `list_var_decl_1` → , `list_var_decl`
+17.                  | E
 
 ### Function:
-`func_def_decl` → func <NAME> ( `list_var_decl` ) : `func_def_decl_1`
+18. `func_def_decl` → func <NAME> ( `list_var_decl` ) : `func_def_decl_1`
 
-`func_def_decl_1` → void { `nfd_list_instructions` }
-                  | <TYPE> `func_def_decl_2`
+19. `func_def_decl_1` → void { `nfd_list_instructions` }
+20.                  | <TYPE> `func_def_decl_2`
 
-`func_def_decl_2` → { `nfd_list_instructions` return `any_lex` }
-                  | E
+21. `func_def_decl_2` → { `nfd_list_instructions` return `any_lex` }
+22.                   | E
 
-`func_call_1` → ( `list_any_lex` )
+23. `func_call_1` → ( `list_any_lex` )
 
 ### Control
-`control_instructions` → `if` 
-                       | `while`
+24. `control_instructions` → `if` 
+25.                        | `while`
 
-`if` → if (`bool_operation`) { `nfd_list_instructions` } `elif` `if_1`
+26. `if` → if (`bool_operation`) { `nfd_list_instructions` } `elif` `if_1`
 
-`if_1` → else { `nfd_list_instructions`}
-       | E
+27. `if_1` → else { `nfd_list_instructions`}
+28.       | E
 
-`elif` → elif (`bool_operation`) { `nfd_list_instructions` } `elif_1`
-       | E
+29. `elif` → elif (`bool_operation`) { `nfd_list_instructions` } `elif_1`
+30.       | E
 
-`elif_1` → `elif`
-         | E
+31. `elif_1` → `elif`
+32.         | E
 
-`while` → while (`bool_operation`) {`nfd_list_instructions`}
+33. `while` → while (`bool_operation`) {`nfd_list_instructions`}
 
 ### Values:
-`list_instructions` → `instructions` `list_instructions_1`
+34. `list_instructions` → `instructions` `list_instructions_1`
 
-`list_instructions_1` → `list_instructions` 
-                      | E
+35. `list_instructions_1` → `list_instructions` 
+36.                       | E
 
-`instructions`→ `nfd_instructions`
-              | `func_def_decl`
+37. `instructions`→ `nfd_instructions`
+38.               | `func_def_decl`
 
-`nfd_list_instructions` → `nfd_instructions` `nfd_list_instructions_1`
+39. `nfd_list_instructions` → `nfd_instructions` `nfd_list_instructions_1`
 
-`nfd_list_instructions_1` → `nfd_list_instructions` 
-                          | E
+40. `nfd_list_instructions_1` → `nfd_list_instructions` 
+41.                          | E
 
-`nfd_instructions`→ `control_instructions`
-                  | `def_decl_call`
+42. `nfd_instructions`→ `control_instructions`
+43.                   | `def_decl_call`
 
-`list_any_lex` → `any_lex` `list_any_lex_1`
-               | E
+44. `list_any_lex` → `any_lex` `list_any_lex_1`
+45.                | E
 
-`list_any_lex_1` → , `list_any_lex`
-                 | E
+46. `list_any_lex_1` → , `list_any_lex`
+47.                  | E
 
-`any_lex` → <STRING>
-          | `operation`
+48. `any_lex` → <STRING>
+49.           | `operation`
 
 
 ### Operation
-`operation` -> `operand` `operation_1`
-`operation_1` -> <ARITHM_OPERATORS> `operand` `operation_1`
-              | E
-`operand` -> `value`
-          |  - `value`
+50. `operation` -> `operand` `operation_1`
+51. `operation_1` -> <ARITHM_OPERATORS> `operand` `operation_1`
+52.               | E
+53. `operand` -> `value`
+54.           |  - `value`
 
 ### Bool_Operation
-`bool_operation` -> `comp_operation` `bool_operation_1`
-`bool_operation_1` -> <BOOL_OPERATORS> `comp_operation` `bool_operation_1`
-                   | E
+55. `bool_operation` -> `comp_operation` `bool_operation_1`
+56. `bool_operation_1` -> <BOOL_OPERATORS> `comp_operation` `bool_operation_1`
+57.                    | E
 
-`comp_operation` -> `any_lex` `comp_operation_1`
-                 |  ! `any_lex`
-                 | not `any_lex`
+58. `comp_operation` -> `any_lex` `comp_operation_1`
+59.                  |  ! `any_lex`
+60.                  | not `any_lex`
 
-`comp_operation_1` -> <COMP_OPERATORS> `any_lex`
-                   | E
+61. `comp_operation_1` -> <COMP_OPERATORS> `any_lex`
+62.                    | E
 
 ### Callable Values
-`value` → <NAME> `value_1`
-        | <NUMBER>
+63. `value` → <NAME> `value_1`
+64.         | <NUMBER>
 
 
-`value_1` →`func_call_1`
-          | E
+65. `value_1` →`func_call_1`
+66.           | E
 
 ## Notes
 * Upper case names enclosed with '<>' are tokens.
