@@ -1,12 +1,12 @@
- string  i = "algo"
- int name = 123
+ ##string  i = "algo"
+ ##int name = 123
 # float b = 10.0
 # int other = 0x123abcdef
 
 # something = 0b0101010
 # aaaa = 0o12345670
 
- str1 = "string example with one number 123"
+#str1 = "string example with one number 123"
 # str2 = "\n \" "
 
 # while (i != 0) {
@@ -14,9 +14,10 @@
 #
 # }
 
-# func something(int one, string two, float tree) : void {
-  # return  
-# }
+ func something(int one, string two, float tree) : void {
+ name = 123
+   return  
+ }
 
 # something( "one string" , "another string", a + b, b+c)
 
@@ -26,4 +27,4 @@
 # else {}
 # elif (a >= b)
 
-#int[] asas = "asd"
+#int[ ] asas = "asd"

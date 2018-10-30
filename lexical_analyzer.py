@@ -94,11 +94,11 @@ terminals = {
     ']': 3,
     'ASSIGN_OPERATOR': 4,
     'ASSIGN_ESP_OPERATORS': 5,
-    ',': 6,
+    'COMMA': 6,
     'func': 7,
     '(': 8,
     ')': 9,
-    ':': 10,
+    'FUNCTION_OPERATOR': 10,
     'void': 11,
     '{': 11,
     '}': 12,
@@ -162,14 +162,14 @@ table = [
 [2,3,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 [-1,4,5,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 [7,7,-1,-1,6,-1,-1,7,-1,-1,-1,-1,-1,7,7,7,-1,-1,7,-1,-1,-1,-1,-1,-1,-1,-1,7],
-[9,9,-1,-1,8,-1,-1,9,-1,-1,-1,-1,-1,9,9,9,-1,-1,9,-1,-1,-1,-1,-1,-1,-1,-1,9],
+[9,9,-1,-1,10,-1,-1,9,-1,-1,-1,-1,-1,9,9,9,-1,-1,9,-1,-1,-1,-1,-1,-1,-1,-1,9], #table{4}{4} = 1o
 [-1,-1,-1,-1,10,11,-1,-1,12,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 [-1,13,14,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,13,-1,-1,13,-1-1,-1,-1,-1,13,-1],
-[15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1], 
 [-1,-1,-1,-1,-1,-1,16,-1,-1,17,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 [-1,-1,-1,-1,-1,-1,-1,18,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 [20,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,19,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[22,22,-1,-1,-1,-1,-1,22,-1,-1,-1,-1,21,-1,-1,22,-1,-1,22,-1,-1,-1,-1,-1,-1,-1,-1,22],
+[22,22,-1,-1,-1,-1,-1,22,-1,-1,-1,21,-1,-1,-1,22,-1,-1,22,-1,-1,-1,-1,-1,-1,-1,-1,22], #table{11}{11} = 21, #table{11}{12} = -1
 [-1,-1,-1,-1,-1,-1,-1,-1,23,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,24,-1,-1,25,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,26,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
@@ -183,7 +183,7 @@ table = [
 [39,39,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,39,-1,-1,39,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 [40,40,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,41,41,40,-1,-1,40,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 [43,43,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,42,-1,-1,42,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,44,-1,45,-1,-1,-1,-1,-1,45,-1,-1,-1,-1,-1,-1,-1,-1,-1,44,-1,44,-1,-1,-1,-1,44,-1],
+[-1,44,-1,45,-1,-1,-1,-1,-1,45,-1,-1,45,-1,-1,-1,-1,-1,-1,44,-1,44,-1,-1,-1,-1,44,-1],#table{25}{12}=45
 [-1,-1,-1,47,-1,-1,46,-1,-1,47,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 [-1,49,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,48,-1,-1,49,-1,-1,-1,-1,49,-1],
 [-1,50,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,50,-1,-1,-1,-1,50,-1],
@@ -201,16 +201,42 @@ rules = { #inverted rules and 'ASSIGN_OPERATOR' instead of '='
     1 : ['list_instructions'],
     2 : ['def_decl_call_1' , 'TYPE'],
     3 : ['def_decl_call_2' , 'NAME'],
-    4 :  ['def_decl_call_1_1' , 'NAME'],
-    6 : [ 'any_lex' , 'ASSIGN_OPERATOR'],
-    10: [ 'def_decl_call_2_1' , 'ASSIGN_OPERATOR' ],
-    13: ['any_lex'],
+    4 : ['def_decl_call_1_1' , ],
+	5 : ['def_decl_call_1_2' , 'NAME' , 'CLOSE_BRACKET' , 'OPEN_BRACKET'], ##  
+    6 : ['any_lex' , 'ASSIGN_OPERATOR'],
+    7 : [ ],
+	8 : ['CLOSE_BRACKET', 'list_any_lex' , 'OPEN_BRACKET' ],   ##
+	9 : [ ],
+	10: ['def_decl_call_2_1' , 'ASSIGN_OPERATOR' ],
+    11: ['any_lex' , 'ASSIGN_ESP_OPERATORS'], ##
+	12: ['func_call_1'],
+	13: ['any_lex'],
+	14: ['CLOSE_BRACKET', 'list_any_lex' , 'OPEN_BRACKET' ], ##
     15: ['list_var_decl_1', 'NAME' , 'TYPE' ],
+	16: ['list_var_decl' , 'COMMA'],
+	17: [ ],
+	18: ['func_def_decl_1' , 'FUNCTION_OPERATOR' , 'CLOSE_BRACKET' , 'list_var_decl' , 'OPEN_BRACKET' , 'NAME' , 'CONTROL_WORD'],
+	19: ['CLOSE_BRACKET', 'nfd_list_instructions' , 'OPEN_BRACKET' , 'void' ],
+	20: ['func_def_decl_2' , 'TYPE' ],
+	21: ['CLOSE_BRACKET', 'list_any_lex' , 'CONTROL_WORD', 'nfd_list_instructions', 'OPEN_BRACKET'  ], ##CONTROL_WORD instead return
+	22: [ ],
+	23: ['CLOSE_BRACKET', 'list_any_lex' , 'OPEN_BRACKET' ],
+	24: ['if' ],
+	25: ['while'],
     34: ['list_instructions_1' , 'instructions'],
     35: ['list_instructions'],
     37: ['nfd_instructions'],
+	38: ['func_def_decl'],
+	39: ['nfd_list_instructions_1' , 'nfd_instructions'],
+	40: ['nfd_list_instructions'],
+	41: [ ],
+	42: ['control_instructions'],
     43: ['def_decl_call'],
-    48: ['STRING'],
+	44: ['list_any_lex_1' , 'any_lex' ],
+    45: [ ],
+	46: ['list_any_lex' , 'COMMA' ],
+	47: [ ],
+	48: ['STRING'],
     49: ['operation'], 
     50: ['operation_1' , 'operand' ],
     52: [],
@@ -230,8 +256,8 @@ def validate (token_list):
         in_process = True
         while in_process:
             #print("s:",stack)
-            if i.token_type.name == 'OPEN_BRACKET' or i.token_type.name == 'CLOSE_BRACKET':
-               term = terminals[i.token_type.value] #TODO:fix value of OPEN_BRACKET
+            if i.token_type.name == 'OPEN_BRACKET' or i.token_type.name == 'CLOSE_BRACKET' or i.token_type.name == 'CONTROL_WORD':
+               term = terminals[i.value] 
             else:
                 term = terminals[i.token_type.name]
             #print(i.token_type.name, "term:" ,term)
@@ -251,7 +277,7 @@ def validate (token_list):
             else:
                 if i.token_type.name == stack[-1]:
                     stack.pop()
-                    print("term founded", i.token_type.name)
+                    print("...................term founded", i.token_type.name)
                     in_process = False
     return True
 
