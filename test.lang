@@ -1,15 +1,15 @@
-# string  i = "algo"
-# int name = 123
-##float b = 10.0
+## string  i = "algo"
+## int name = 123
+#float b = 10.0
 # int other = 0x123abcdef
 
 # something = 0b0101010
 # aaaa = 0o12345670
 
-str1 = "string example with one number 123"
+#str1 = "string example with one number 123"
 # str2 = "\n \" "
 
-# while (i != 0) {
+ #while (i != 0) {
   # abc = 123
 #
 # }
@@ -21,7 +21,7 @@ str1 = "string example with one number 123"
 
 # something( "one string" , "another string", a + b, b+c)
 
-# a + b
+ a + b
 # a++
 # if (a < b){}
 # else {}
