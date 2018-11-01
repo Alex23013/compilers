@@ -64,11 +64,11 @@ def tokenize(str_list, lineN):
             inString = True
             strTmp = []
         elif patter_number.fullmatch(item):
-            if item[1] == 'o' and not pattern_oct.fullmatch(item):
+            if len(item) > 1 and item[1] == 'o' and not pattern_oct.fullmatch(item):
                 tokens.append(Token(defs.Token_type.ERROR,
                                     f"Invalid octal number {item}", lineN))
                 continue
-            if item[1] == 'b' and not pattern_bin.fullmatch(item):
+            if len(item) > 1  and item[1] == 'b' and not pattern_bin.fullmatch(item):
                 tokens.append(Token(defs.Token_type.ERROR,
                                     f"Invalid binary number {item}", lineN))
                 continue
