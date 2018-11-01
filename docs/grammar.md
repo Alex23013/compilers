@@ -11,7 +11,7 @@
 6. `def_decl_call_1_1` → = `any_lex`
 7.                   | E
 
-8. `def_decl_call_1_2` → = [ `list_any_lex` ] 
+8. `def_decl_call_1_2` → = { `list_any_lex` } # curly brackets instead brackets
 9.                   | E
 
 
