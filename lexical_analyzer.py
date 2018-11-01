@@ -26,7 +26,7 @@ pattern_oct = re.compile(r'0o[0-7]+', re.I)
 
 pattern_valid_name = re.compile(r'[a-z_]\w*', re.I)
 
-pattern_split = re.compile(r'(\W+)')
+pattern_split = re.compile(r'([^\w.]+)')
 
 
 def tokenize(str_list, lineN):
