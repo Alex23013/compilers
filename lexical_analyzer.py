@@ -283,24 +283,28 @@ def validate (token_list):
         a=45
         while in_process and a <55:
             a=a+1
-            print("s:",stack)
+            if i.token_type.name == 'ERROR':
+                print (i.token_type.name, "Invalid number of quotes")
+                in_process = False
+                break
+            #print("s:",stack)
             if i.token_type.name == 'OPEN_BRACKET' or i.token_type.name == 'CLOSE_BRACKET' or i.token_type.name == 'CONTROL_WORD' or i.token_type.name=='BOOLEAN_OPERATOR':
                term = terminals[i.value] 
             else:
                 term = terminals[i.token_type.name]
-            print(i.token_type.name, "term:" ,term) 
+            #print(i.token_type.name, "term:" ,term) 
             non_term = is_non_terminal(stack[-1])
-            print('nonTermIndex', non_term)
+            #print('nonTermIndex', non_term)
             if non_term != -1:
                 nonT=non_terminals[stack[-1]]
-                print(stack[-1],"nonT:",nonT+1)
+                #print(stack[-1],"nonT:",nonT+1)
                 tmp = table[nonT][term]
-                print ("rule:",tmp,rules[tmp+1]) #tmp+1 because rules start in 1 on the grammar
+                #print ("rule:",tmp,rules[tmp+1]) #tmp+1 because rules start in 1 on the grammar
                 if tmp != -1:
                     stack.pop()
                     stack+=rules[tmp+1]
                 else:
-                    print("ERROR invalid enter")
+                    print("ERROR invalid enter in syntax table")
                     return False
             else:
                 if i.token_type.name == stack[-1]:

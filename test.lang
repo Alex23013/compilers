@@ -7,7 +7,7 @@
  aaaa = 0o12345670
 
 str1 = "string example with one number 123"
- #str2 = "\n \" "
+str2 = "\n \" " # syntax can recognize error Token.type and continue analyzing
 
  while (i ) {
    abc = 123
@@ -28,3 +28,5 @@ str1 = "string example with one number 123"
  else { b= c}
  
 string[] asas = {"uno","dos"}
+ int[] numbers = {1,2,3,4}
+
