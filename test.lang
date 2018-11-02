@@ -22,7 +22,6 @@ str2 = "\n \" " # syntax can recognize error Token.type and continue analyzing
  something( "one string" , "another string", a + b, b+c)
 
   a = b +c 
- #a++
  if (a < b){ a = b}
  elif (a > b) {s=d}
  else { b= c}
