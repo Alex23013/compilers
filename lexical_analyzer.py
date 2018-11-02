@@ -304,7 +304,7 @@ def validate (token_list):
                     stack.pop()
                     stack+=rules[tmp+1]
                 else:
-                    print("ERROR invalid enter in syntax table")
+                    print("ERROR invalid enter in syntax table with input ", i.value  )
                     return False
             else:
                 if i.token_type.name == stack[-1]:

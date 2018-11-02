@@ -29,3 +29,13 @@ str2 = "\n \" " # syntax can recognize error Token.type and continue analyzing
 string[] asas = {"uno","dos"}
  int[] numbers = {1,2,3,4}
 
+ while(i < 23){
+	int a = 87
+	float [] arr
+	#comments are ignored
+	arr = arr + a
+	if (!i) 
+		{
+			i = b
+		}
+}
