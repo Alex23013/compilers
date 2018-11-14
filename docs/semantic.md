@@ -64,7 +64,7 @@ check_elements_types(list): check that all the elements of a list have the same 
                                        `def_decl_call_1_1`.type = `any_lex`.type
                                      }
 7. `def_decl_call_1_1` → E { 
-                             # do nothing
+                             <continue>
                            }
 
 8. `def_decl_call_1_2` → = '{' `list_any_lex` '}' {
@@ -74,7 +74,7 @@ check_elements_types(list): check that all the elements of a list have the same 
                                                       <error> "Los elementos de la lista deben ser del mismo tipo."
                                                   }
 9. `def_decl_call_1_2` → E {
-                             # do nothing
+                             <continue>
                            }
 
 
@@ -83,7 +83,7 @@ check_elements_types(list): check that all the elements of a list have the same 
 12. `def_decl_call_2` → `func_call_1`
 
 13. `def_decl_call_2_1` → `any_lex`
-14. `def_decl_call_2_1` → [ `list_any_lex` ]
+14. `def_decl_call_2_1` → { `list_any_lex` }
 
 
 15. `list_var_decl` → <TYPE> <NAME> `list_var_decl_1`
