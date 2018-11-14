@@ -7,12 +7,13 @@
 }
 
 
-push_element(dest, element)
-push_elements(dest, element_list)
+push_element(dest, element): adds one olement to a list
+push_elements(dest, element_list): adds all the elements from one element_list to the other
 
 assign(id, value)
 
-add_id(id_name, type)
+add_id(id_name, type): add the id_name with its type to the table.
+exists(id_name): checks if an id_name alraedy exists.
 
 compare_types(type1, type2): 
   returns 1 if the types are equal, 
@@ -20,6 +21,9 @@ compare_types(type1, type2):
   returns 0 if the types are incompatible 
 
 to_type(type, value): converts value to type
+
+evaluate(token_list): evaluate an operation and return its result
+
 
 check_elements_types(list): check that all the elements of a list have the same type, returns boolean
 
@@ -32,7 +36,9 @@ check_elements_types(list): check that all the elements of a list have the same 
                                                 `def_decl_call`.val = `def_decl_call_1`.val
                                                 `def_decl_call_1`.inh = <TYPE>.lexval <revisar>
                                               }
-3. `def_decl_call` → <NAME> `def_decl_call_2` # Assignment
+3. `def_decl_call` → <NAME> `def_decl_call_2` {# Assignment 
+                                                  
+}
 
 4. `def_decl_call_1` →  <NAME> `def_decl_call_1_1` {
                                                      if (`def_decl_call_1_1`.val == null):
@@ -78,8 +84,13 @@ check_elements_types(list): check that all the elements of a list have the same 
                            }
 
 
-10. `def_decl_call_2` → = `def_decl_call_2_1`
-11. `def_decl_call_2` → <ASSIGN_ESP_OPERATORS> `any_lex`
+10. `def_decl_call_2` → = `def_decl_call_2_1` {
+                                                `def_decl_call_2`.val = `def_decl_call_2_1`.val
+                                                `def_decl_call_2`.type = `def_decl_call_2_1`.type
+                                              }
+11. `def_decl_call_2` → <ASSIGN_ESP_OPERATORS> `any_lex` {
+                                                           
+                                                         }
 12. `def_decl_call_2` → `func_call_1`
 
 13. `def_decl_call_2_1` → `any_lex`
