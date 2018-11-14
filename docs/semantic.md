@@ -36,27 +36,27 @@ check_elements_types(list): check that all the elements of a list have the same 
 
 4. `def_decl_call_1` →  <NAME> `def_decl_call_1_1` {
                                                      if (`def_decl_call_1_1`.val == null):
-                                                       add_id(<NAME>.valex, `def_decl_call_1`.type)
+                                                       add_id(<NAME>.lexval, `def_decl_call_1`.type)
                                                        <return>
                                                      if (compare_types(`def_decl_call_1_1`.type, `def_decl_call_1`.inh) == 0):
                                                        <error> "El valor `def_decl_call_1_1`.val no se puede convertir a `def_decl_call_1`.inh"
                                                        <return>
                                                      if (compare_types(`def_decl_call_1_1`.type, `def_decl_call_1`.inh) == -1):
                                                        to_type(`def_decl_call_1`.type, `def_decl_call_1_1`.val)
-                                                     add_id(<NAME>.valex, `def_decl_call_1`.type)
-                                                     assign(<NAME>.valex, `def_decl_call_1_1`.val)
+                                                     add_id(<NAME>.lexval, `def_decl_call_1`.type)
+                                                     assign(<NAME>.lexval, `def_decl_call_1_1`.val)
                                                    }
 5. `def_decl_call_1` →  [] <NAME>  `def_decl_call_1_2` {
                                                          if (`def_decl_call_1_2`.val == null):
-                                                           add_id(<NAME>.valex, `def_decl_call_1`.type)
+                                                           add_id(<NAME>.lexval, `def_decl_call_1`.type)
                                                            <return>
                                                          if (compare_types(`def_decl_call_1_2`.type, `def_decl_call_1`.inh) == 0):
                                                            <error> "El valor `def_decl_call_1_2`.val no se puede convertir a `def_decl_call_1`.inh"
                                                            <return>
                                                          if (compare_types(`def_decl_call_1_2`.type, `def_decl_call_1`.inh) == -1):
                                                            to_type(`def_decl_call_1`.type, `def_decl_call_1_2`.val)
-                                                         add_id(<NAME>.valex, `def_decl_call_1`.type)
-                                                         assign(<NAME>.valex, `def_decl_call_1_2`.val)
+                                                         add_id(<NAME>.lexval, `def_decl_call_1`.type)
+                                                         assign(<NAME>.lexval, `def_decl_call_1_2`.val)
                                                        }
 
 6. `def_decl_call_1_1` → = `any_lex` {
@@ -206,7 +206,9 @@ check_elements_types(list): check that all the elements of a list have the same 
 
 
 65. `value_1` →`func_call_1`
-66.           → E
+66.           → E {
+                    continue
+                  }
 
 ## Notes
 * Upper case names enclosed with '<>' are tokens.
