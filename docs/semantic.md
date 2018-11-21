@@ -3,17 +3,22 @@
   val = null
   error = null
   inh = null
-  syn = null
+}
+in functions the value type is an structure:
+`function_type` {
+  return = null
+  params = null
 }
 
 
 push_element(dest, element): adds one olement to a list
 push_elements(dest, element_list): adds all the elements from one element_list to the other
 
-assign(id, value)
 
-add_id(id_name, type): add the id_name with its type to the table.
+add_id(id_name, type, value): add the id_name with its type and value to the table.
+assign(id, value): updates the value of an entry in the table.
 exists(id_name): checks if an id_name alraedy exists.
+type(id_name): returns the type of the variable id_name.
 
 compare_types(type1, type2): 
   returns 1 if the types are equal, 
@@ -26,6 +31,7 @@ evaluate(token_list): evaluate an operation and return its result
 
 
 check_elements_types(list): check that all the elements of a list have the same type, returns boolean
+list_type(type): returns the type of the elements in the list
 
 ## Free Context Grammar
 1. `program`→ `list_instructions`   
@@ -34,35 +40,47 @@ check_elements_types(list): check that all the elements of a list have the same 
 2. `def_decl_call` → <TYPE> `def_decl_call_1` {  # Type definition/declaration
                                                 `def_decl_call`.type = <TYPE>.lexval
                                                 `def_decl_call`.val = `def_decl_call_1`.val
-                                                `def_decl_call_1`.inh = <TYPE>.lexval <revisar>
+                                                `def_decl_call_1`.inh = <TYPE>.lexval
                                               }
 3. `def_decl_call` → <NAME> `def_decl_call_2` {# Assignment 
-                                                  
-}
+                                                if(!exists(<NAME>.lexval)):
+                                                  <error> "No existe una variable con el nombre <NAME>.lexval" 
+                                                  <return>
+                                                if (compare_types(`def_decl_call_2`.type, type(<NAME>.lexval)) == 0):
+                                                   <error> "El valor `def_decl_call_2`.val no se puede convertir a type(<NAME>.lexval)"
+                                                   <return>
+                                                if (compare_types(`def_decl_call_2`.type, type(<NAME>.lexval)) == -1):
+                                                   to_type(type(<NAME>.lexval), `def_decl_call_2`.val)
+                                                assign(<NAME>.lexval, `def_decl_call_2`.val)
+                                              }
 
 4. `def_decl_call_1` →  <NAME> `def_decl_call_1_1` {
+                                                     if(exists(<NAME>.lexval)):
+                                                       <error> "Ya existe una variable con el nombre <NAME>.lexval" 
                                                      if (`def_decl_call_1_1`.val == null):
-                                                       add_id(<NAME>.valex, `def_decl_call_1`.type)
+                                                       add_id(<NAME>.lexval, `def_decl_call_1`.type)
                                                        <return>
                                                      if (compare_types(`def_decl_call_1_1`.type, `def_decl_call_1`.inh) == 0):
                                                        <error> "El valor `def_decl_call_1_1`.val no se puede convertir a `def_decl_call_1`.inh"
                                                        <return>
                                                      if (compare_types(`def_decl_call_1_1`.type, `def_decl_call_1`.inh) == -1):
                                                        to_type(`def_decl_call_1`.type, `def_decl_call_1_1`.val)
-                                                     add_id(<NAME>.valex, `def_decl_call_1`.type)
-                                                     assign(<NAME>.valex, `def_decl_call_1_1`.val)
+                                                     add_id(<NAME>.lexval, `def_decl_call_1`.type)
+                                                     assign(<NAME>.lexval, `def_decl_call_1_1`.val)
                                                    }
 5. `def_decl_call_1` →  [] <NAME>  `def_decl_call_1_2` {
+                                                         if(exists(<NAME>.lexval)):
+                                                           <error> "Ya existe una variable ocn el nombre <NAME>.lexval" 
                                                          if (`def_decl_call_1_2`.val == null):
-                                                           add_id(<NAME>.valex, `def_decl_call_1`.type)
+                                                           add_id(<NAME>.lexval, `def_decl_call_1`.type)
                                                            <return>
                                                          if (compare_types(`def_decl_call_1_2`.type, `def_decl_call_1`.inh) == 0):
                                                            <error> "El valor `def_decl_call_1_2`.val no se puede convertir a `def_decl_call_1`.inh"
                                                            <return>
                                                          if (compare_types(`def_decl_call_1_2`.type, `def_decl_call_1`.inh) == -1):
                                                            to_type(`def_decl_call_1`.type, `def_decl_call_1_2`.val)
-                                                         add_id(<NAME>.valex, `def_decl_call_1`.type)
-                                                         assign(<NAME>.valex, `def_decl_call_1_2`.val)
+                                                         add_id(<NAME>.lexval, `def_decl_call_1`.type)
+                                                         assign(<NAME>.lexval, `def_decl_call_1_2`.val)
                                                        }
 
 6. `def_decl_call_1_1` → = `any_lex` {
@@ -76,6 +94,7 @@ check_elements_types(list): check that all the elements of a list have the same 
 8. `def_decl_call_1_2` → = '{' `list_any_lex` '}' {
                                                     if(check_elements_types(`list_any_lex`.val)):
                                                       `def_decl_call_1_2`.val = `list_any_lex`.val
+                                                      `def_decl_call_1_2`.type = list_type(`list_any_lex`.val) # This must be the type of the first element, because all the elements have the same type
                                                     else:
                                                       <error> "Los elementos de la lista deben ser del mismo tipo."
                                                   }
@@ -89,13 +108,22 @@ check_elements_types(list): check that all the elements of a list have the same 
                                                 `def_decl_call_2`.type = `def_decl_call_2_1`.type
                                               }
 11. `def_decl_call_2` → <ASSIGN_ESP_OPERATORS> `any_lex` {
-                                                           
+                                                          # TODO: send the value of def_decl_call_2, the operator and the right side tokens to evaluate().
+                                                          # it requieres that def_decl_call_2 pass it value with .inh
                                                          }
 12. `def_decl_call_2` → `func_call_1`
 
-13. `def_decl_call_2_1` → `any_lex`
-14. `def_decl_call_2_1` → { `list_any_lex` }
-
+13. `def_decl_call_2_1` → `any_lex` {
+                                      `def_decl_call_2_1`.val = `any_lex`.val
+                                      `def_decl_call_2_1`.type = `any_lex`.type
+                                    }
+14. `def_decl_call_2_1` → '{' `list_any_lex` '}' {
+                                                   if(check_elements_types(`list_any_lex`.val)):
+                                                     `def_decl_call_2_1`.val = `list_any_lex`.val
+                                                     `def_decl_call_2_1`.type = list_type(`list_any_lex`.val)
+                                                   else:
+                                                     <error> "Los elementos de la lista deben ser del mismo tipo."
+                                                 }
 
 15. `list_var_decl` → <TYPE> <NAME> `list_var_decl_1`
 
@@ -103,15 +131,27 @@ check_elements_types(list): check that all the elements of a list have the same 
 17. `list_var_decl_1` → E
 
 ### Function:
-18. `func_def_decl` → func <NAME> ( `list_var_decl` ) : `func_def_decl_1`
+18. `func_def_decl` → func <NAME> ( `list_var_decl` ) : `func_def_decl_1` {
 
-19. `func_def_decl_1` → void { `nfd_list_instructions` }
-20. `func_def_decl_1` → <TYPE> `func_def_decl_2`
+}
 
-21. `func_def_decl_2` → { `nfd_list_instructions` return `any_lex` }
-22. `func_def_decl_2`  → E
+19. `func_def_decl_1` → void '{' `nfd_list_instructions` '}' {
 
-23. `func_call_1` → ( `list_any_lex` )
+}
+20. `func_def_decl_1` → <TYPE> `func_def_decl_2` {
+
+}
+
+21. `func_def_decl_2` → '{' `nfd_list_instructions` return `any_lex` '}' {
+
+}
+22. `func_def_decl_2` → E {
+
+}
+
+23. `func_call_1` → ( `list_any_lex` ) {
+
+}
 
 ### Control
 24. `control_instructions` → `if` 
@@ -217,7 +257,9 @@ check_elements_types(list): check that all the elements of a list have the same 
 
 
 65. `value_1` →`func_call_1`
-66.           → E
+66.           → E {
+                    continue
+                  }
 
 ## Notes
 * Upper case names enclosed with '<>' are tokens.
