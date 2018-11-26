@@ -333,7 +333,6 @@ list_type(type): returns a list with the types of the elements in the list
                          `value`.val = <NUMBER>.lexval # Is this value needed?
                        }
 
-
 65. `value_1` → `func_call_1` {
                                 `value_1`.type = `func_call_1`.type
                               }
