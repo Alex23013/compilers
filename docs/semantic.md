@@ -210,8 +210,14 @@ list_type(type): returns a list with the types of the elements in the list
                                 `list_instructions_1`.val = empty_list
                               }
 
-37. `instructions` → `nfd_instructions`
-38. `instructions` → `func_def_decl`
+37. `instructions` → `nfd_instructions` {
+                                          `instructions`.val = `nfd_instructions`.val  
+                                          `instructions`.type = `nfd_instructions`.type  
+                                        }
+38. `instructions` → `func_def_decl` {
+                                       `instructions`.val = `func_def_decl`.val  
+                                       `instructions`.type = `func_def_decl`.type  
+                                     }
 
 39. `nfd_list_instructions` → `nfd_instructions` `nfd_list_instructions_1` {
                                                                              push_element(`nfd_list_instructions`.val, `nfd_instructions`) 
@@ -225,8 +231,14 @@ list_type(type): returns a list with the types of the elements in the list
                                     `nfd_list_instructions_1` = empty_list  
                                   }
 
-42. `nfd_instructions` → `control_instructions`
-43. `nfd_instructions` → `def_decl_call`
+42. `nfd_instructions` → `control_instructions` {
+                                                  `nfd_instructions`.val = `constrol_instructions`.val  
+                                                  `nfd_instructions`.type = `constrol_instructions`.type  
+                                                } 
+43. `nfd_instructions` → `def_decl_call` {
+                                           `nfd_instructions`.val = `def_decl_call`.val  
+                                           `nfd_instructions`.type = `def_decl_call`.type  
+                                         }
 
 44. `list_any_lex` → `any_lex` `list_any_lex_1` {
                                                   push_element(`list_any_lex`.val, `any_lex`)
