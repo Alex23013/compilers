@@ -28,13 +28,33 @@ compare_types(type1, type2):
 to_type(type, value): converts value to type
 
 evaluate(token_list): evaluate an operation and return its result
-
+evaluateBool(`any_lex`,<COMP_OPERATORS>.lexval,`any_lex`) : returns the boolean value of the comparation 
 
 check_elements_types(list): check that all the elements of a list have the same type, returns boolean
 list_type(type): returns a list with the types of the elements in the list
 
+`nfd_list_instructions`.execute() : ejecuta las instrucciones que esten dentro de la lista
+
+control_instructions-nonterminals {
+  `if`
+  `elif`
+  `if_1`
+  `elif_1`
+  `while`
+}        
+
+control_instructions-nonterminals.val{
+                            0: no se ejecutó
+                            1: se ejecutó
+                          }
+                  
+hasBooleanValue(`any_lex`) : determina si su valor es Booleano  (llamadas a funcion , variables, int, string) o de otro tipo
+
+
 ## Free Context Grammar
-1. `program`→ `list_instructions`   
+1. `program`→ `list_instructions` {
+                                  `program`.val = `list_instructions`.val 
+                                  }   
 
 ### Variables
 2. `def_decl_call` → <TYPE> `def_decl_call_1` {  # Type definition/declaration
@@ -178,21 +198,75 @@ list_type(type): returns a list with the types of the elements in the list
                                        }
 
 ### Control
-24. `control_instructions` → `if` 
-25. `control_instructions` → `while`
+24. `control_instructions` → `if` {
+                                    `control_instructions`.val = `if`.val
+                                    <revisar>
+                                  }
 
-26. `if` → if (`bool_operation`) { `nfd_list_instructions` } `elif` `if_1`
+25. `control_instructions` → `while`{
+                                    `control_instructions`.val = `while`.val
+                                    <revisar>
+                                    }
 
-27. `if_1` → else { `nfd_list_instructions`}
-28. `if_1` → E
 
-29. `elif` → elif (`bool_operation`) { `nfd_list_instructions` } `elif_1`
-30. `elif` → E
+26. `if` → if (`bool_operation`) { `nfd_list_instructions` } `elif` `if_1`{
+                                                                            if(`bool_operation`. val == 1){
+                                                                              `nfd_list_instructions`.execute()
+                                                                              `if`.val = 1
+                                                                            }else{
+                                                                              if (`elif`. val != 0 ){
+                                                                                `if`.val =  `elif`. val        
+                                                                              }else{
+                                                                                if (`if_1`. val != 0 ){
+                                                                                  `if`.val =  `if_1`. val        
+                                                                                }else{
+                                                                                  `if`.val = 0
+                                                                                }  
+                                                                              }
+                                                                            }
+}
 
-31. `elif_1` → `elif`
-32. `elif_1` → E
+27. `if_1` → else { `nfd_list_instructions`} {
+                                             `nfd_list_instructions`.execute()  
+                                             `if_1`.val = 1
+                                            }
+28. `if_1` → E {
+              `if_1`.val = 0
+               }
 
-33. `while` → while (`bool_operation`) {`nfd_list_instructions`}
+29. `elif` → elif (`bool_operation`) { `nfd_list_instructions` } `elif_1` {
+                                                                           if (`bool_operation`.val ==1){
+                                                                            `nfd_list_instructions`.execute()
+                                                                            `elif`.val = 1
+                                                                           } else{
+                                                                              if(`elif_1` != 0 ){
+                                                                                `elif`.val = `elif_1`.val
+                                                                              } else{
+                                                                                `elif`.val = 0
+                                                                              }
+                                                                           }
+                                                                          }
+
+30. `elif` → E {
+              `elif`.val = 0
+               }
+
+31. `elif_1` → `elif` {
+                        `elif_1`.val = `elif`.val
+                      }
+
+32. `elif_1` → E {
+              ` elif_1`.val = 0
+               }
+
+33. `while` → while (`bool_operation`) {`nfd_list_instructions`} {
+                                                                    if (`bool_operation`.val ==1){
+                                                                      `nfd_list_instructions`.execute()
+                                                                      `while`.val = 1
+                                                                    } else{
+                                                                      `while`.val = 0
+                                                                    }
+                                                                  }
 
 ### Values: 
 
@@ -304,16 +378,78 @@ list_type(type): returns a list with the types of the elements in the list
                            }
 
 ### Bool_Operation
-55. `bool_operation` → `comp_operation` `bool_operation_1`
-56. `bool_operation_1` → <BOOL_OPERATORS> `comp_operation` `bool_operation_1`
-57.                    → E
+55. `bool_operation` → `comp_operation` `bool_operation_1`{
+                                                            if (`bool_operation_1` == 0){
+                                                              `bool_operation`.val = `comp_operation`.val
+                                                            }else{
+                                                              if (`bool_operation_1`.inh.<BOOL_OPERATORS>.lexval == '&&' ){ #<revisar>
+                                                                `bool_operation`.val = `comp_operation`.val and `bool_operation_1`.val 
+                                                              }else{
+                                                                `bool_operation`.val = `comp_operation`.val or `bool_operation_1`.val
+                                                              }                                                            
+                                                          }
+56. `bool_operation_1` → <BOOL_OPERATORS> `comp_operation` `bool_operation_1`{
+                                                                             if (`bool_operation_1` == 0){
+                                                                                `bool_operation_1`.val = `comp_operation`.val
+                                                                              }else{ 
+                                                                                if (extractOp(`bool_operation_1`.inh) == '&&' ){
+                                                                                  `bool_operation`.val = `comp_operation`.val and `bool_operation_1`.val 
+                                                                                }else{
+                                                                                  `bool_operation`.val = `comp_operation`.val or `bool_operation_1`.val
+                                                                                }
+                                                                              } 
+                                                                             }
+57.                    → E  {
+                              `bool_operation_1` = 0
+                            }
 
-58. `comp_operation` → `any_lex` `comp_operation_1`
-59. `comp_operation` →  ! `any_lex`
-60. `comp_operation` → not `any_lex`
+58. `comp_operation` → `any_lex` `comp_operation_1` {
+                                                      if(`comp_operation_1` == 0 ){
+                                                        if (`any_lex`.type == string or `any_lex`.type == int ){ #the same for float
+                                                          `comp_operation`.val = 1
+                                                        }
+                                                        else{ # any_lex is operation or function call
+                                                          `comp_operation`.val = `any_lex`.val
+                                                        }
+                                                      }else{
+                                                        `comp_operation`.val = `comp_operation_1`.val
+                                                      }
+                                                    }
 
-61. `comp_operation_1` -> <COMP_OPERATORS> `any_lex`
-62.                    → E
+59. `comp_operation` →  ! `any_lex` {
+                                      if ( hasBooleanValue(`any_lex`) ){
+                                        if(`any_lex`.val == 1){
+                                          `comp_operation`.val == 0
+                                        }else{
+                                          `comp_operation`.val == 1
+                                        }
+                                      }
+                                      else{ # any_lex is operation or function call
+                                        <error>"No se puede usar la operacion unaria '!' con any_lex.val"
+                                      }
+                                    }
+
+60. `comp_operation` → not `any_lex` {
+                                      if ( hasBooleanValue(`any_lex`) ){
+                                        if(`any_lex`.val == 1){
+                                          `comp_operation`.val == 0
+                                        }else{
+                                          `comp_operation`.val == 1
+                                        }
+                                      }
+                                      else{ # any_lex is operation or function call
+                                        <error>"No se puede usar la operacion unaria 'not' con any_lex.val"
+                                      }
+                                     }
+
+61. `comp_operation_1` -> <COMP_OPERATORS> `any_lex` {
+                                                     `comp_operation_1`.val = evaluateBool(`comp_operation`.syn,<COMP_OPERATORS>.lexval, `any_lex`) 
+                                                      <revisar>
+                                                     }
+
+62. `comp_operation_1` → E {
+                            `comp_operation_1`.val = 0
+                           }
 
 ### Callable Values
 63. `value` → <NAME> `value_1` {
