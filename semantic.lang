@@ -1,5 +1,9 @@
  string  i = "algo" # 2
- as = "dog"
+ as = "dog" # error
  string  o = "algo"
- pepe = "dog"
- pepe = "dog"
+ string str = 123 # error
+ int x = "xd" # error
+ string o = "otro" # error
+ float f = 123.0123
+ float f2 = 123
+ pepe = "dog" # XD
