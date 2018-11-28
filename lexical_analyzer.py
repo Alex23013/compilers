@@ -284,12 +284,9 @@ def def_decl_call(temp_line_list,args_size):
     if temp_line_list[0].token_type.name == "TYPE" :
         def_decl_call_1(temp_line_list,args_size-1)
     else:
+        print ("error en la linea", temp_line_list[0].lineN)
         print("No se puede asignar una variable que no existe")
-        pass
         #implemented_rules(4,temp_line_list,args_size-1)
-
-    #if temp_line_list[0].token_type.name == "NAME" :
-    #    implemented_rules(10,temp_line_list)
 
 def def_decl_call_1(temp_line_list, args_size):
     if temp_line_list[1].token_type.name == "NAME" :
@@ -297,7 +294,7 @@ def def_decl_call_1(temp_line_list, args_size):
         #implemented_rules(6,temp_line_list,args_size-1)
 
 def def_decl_call_1_1 (temp_line_list, args_size):
-    if len(temp_line_list) > 2:
+    if len(temp_line_list) > 3:
         add_id(temp_line_list[1].value, temp_line_list[0].value, any_lex(temp_line_list[3]) ) #  no compruebo si existe porque add_id ya lo hace    
     
 def any_lex (data):
@@ -311,6 +308,7 @@ def implemented_rules(number_rule,temp_line_list,args_size ):
         switcher = {
             1: program,
             2: def_decl_call,
+            3: print,
             4: def_decl_call_1,
             6: def_decl_call_1_1,
         }
