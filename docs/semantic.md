@@ -16,7 +16,7 @@ push_elements(dest, element_list): adds all the elements from one element_list t
 
 
 add_id(id_name, type, value): add the id_name with its type and value to the table.
-assign(id, value): updates the value of an entry in the table.
+assign(id_name, value): updates the value of an entry in the table.
 exists(id_name): checks if an id_name alraedy exists.
 type(id_name): returns the type of the variable id_name.
 
@@ -25,13 +25,15 @@ compare_types(type1, type2):
   returns -1 if the types have the same base type, ej: float and int have the base type number
   returns 0 if the types are incompatible 
 
-to_type(type, value): converts value to type
+to_type(type, value): converts value to type #Opcional
 
-evaluate(token_list): evaluate an operation and return its result
+evaluate(token_list): evaluate an operation and return its result 
+#Eval(construir string)
+
 evaluateBool(`any_lex`,<COMP_OPERATORS>.lexval,`any_lex`) : returns the boolean value of the comparation 
 
 check_elements_types(list): check that all the elements of a list have the same type, returns boolean
-list_type(type): returns a list with the types of the elements in the list
+list_type(list): returns a list with the types of the elements in the list
 
 `nfd_list_instructions`.execute() : ejecuta las instrucciones que esten dentro de la lista
 
@@ -42,14 +44,16 @@ control_instructions-nonterminals {
   `elif_1`
   `while`
 }        
+#no
 
 control_instructions-nonterminals.val{
                             0: no se ejecutó
                             1: se ejecutó
                           }
-                  
-hasBooleanValue(`any_lex`) : determina si su valor es Booleano  (llamadas a funcion , variables, int, string) o de otro tipo
+#no
 
+hasBooleanValue(`any_lex`) : determina si su valor es Booleano  (llamadas a funcion , variables, int, string) o de otro tipo
+#no
 
 ## Free Context Grammar
 1. `program`→ `list_instructions` {
@@ -200,28 +204,27 @@ hasBooleanValue(`any_lex`) : determina si su valor es Booleano  (llamadas a func
 ### Control
 24. `control_instructions` → `if` {
                                     `control_instructions`.val = `if`.val
-                                    <revisar>
+                                    <continue>
                                   }
 
 25. `control_instructions` → `while`{
                                     `control_instructions`.val = `while`.val
-                                    <revisar>
+                                    <contine>
                                     }
 
 
 26. `if` → if (`bool_operation`) { `nfd_list_instructions` } `elif` `if_1`{
                                                                             if(`bool_operation`. val == 1){
-                                                                              `nfd_list_instructions`.execute()
-                                                                              `if`.val = 1
+                                                                              `nfd_list_instructions`.execute()  #Codificar
+                                                                              #`if`.val = 1
                                                                             }else{
                                                                               if (`elif`. val != 0 ){
-                                                                                `if`.val =  `elif`. val        
+                                                                                #`if`.val =  `elif`. val       
+                                                                                elif() 
                                                                               }else{
                                                                                 if (`if_1`. val != 0 ){
-                                                                                  `if`.val =  `if_1`. val        
-                                                                                }else{
-                                                                                  `if`.val = 0
-                                                                                }  
+                                                                                  #`if`.val =  `if_1`. val        
+                                                                                } 
                                                                               }
                                                                             }
 }

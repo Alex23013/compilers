@@ -276,7 +276,7 @@ def is_non_terminal(item):
     else:
         return -1
     
-def validate (token_list):
+def validate (token_list):  #sintactico
     stack=['$','program']
     for i in token_list:
         in_process = True
@@ -313,6 +313,83 @@ def validate (token_list):
                     in_process = False
     return True
 
+class Non_terminal:
+    def __init__(self, nt_type='', val='', inh=''):
+        self.nt_type = nt_type
+        self.val = val
+        self.inh = inh
+
+    def __repr__(self):
+        return f"Non_terminal({self.val})"
+
+    def __str__(self):
+        return f"Non_terminal: ({self.nt_type}, {self.val}, {self.inh})"
+
+class function_type:
+    def __init__(self, return_func, args):
+        self.return_func = return_func
+        self.args = args
+
+    def __repr__(self):
+        return f"Non_terminal({self.args})"
+
+    def __str__(self):
+        return f"Non_terminal: ({self.return_func}, {self.args})"
+
+semantic_table = {}
+
+def exists(id_name):
+    return id_name in semantic_table
+    
+
+def add_id(id_name, type, value):
+    if not bool(semantic_table):
+        tail = [type, value]
+        semantic_table[id_name] = tail
+
+    elif exists(add_id):
+        tail = [type, value]
+        semantic_table[id_name] = tail
+    else:
+        print("Id exists, did not add")
+
+
+def assign(id_name, value):
+    if exists(add_id):
+        temp_tail = semantic_table[id_name]
+        temp_tail[1] = value
+        semantic_table[id_name] = temp_tail
+    else:
+        print("Id does not exist")    
+
+
+def type(id_name):
+    return semantic_table[id_name][0]
+
+
+def compare_types(type1, type2):
+    if type1 == type2:
+        return 1
+    elif (type1 == 'int' and type2 == 'float') or (type2 == 'int' and type1 == 'float'):
+        return -1
+    elif (type1 == 'string' and type2 != type1) or (type2 == 'string' and type2 != type1):
+        return 0
+
+def check_elements_types(list_of_id):
+    res = list_of_id[0]
+    for i in range(1, len(list_of_id)):
+        if type(res) == type(list_of_id[i]):
+            res = list_of_id[i]
+        else:
+            return False
+    return True
+
+def list_type(list_of_id):
+    res = []
+    for i in range(len(list_of_id)):
+        res.append(type(list_of_id[i]))
+    return res
+
 
 def main():
     filepath = sys.argv[1]
@@ -332,6 +409,7 @@ def main():
         print(i)
     if validate(tokens):
         print("Syntax Done!")
+        #semantico
     else:
         print("ERROR during syntax analysis")
 
