@@ -343,11 +343,7 @@ def exists(id_name):
     
 
 def add_id(id_name, type, value):
-    if not bool(semantic_table):
-        tail = [type, value]
-        semantic_table[id_name] = tail
-
-    elif exists(add_id):
+    if not exists(id_name):
         tail = [type, value]
         semantic_table[id_name] = tail
     else:
@@ -355,7 +351,7 @@ def add_id(id_name, type, value):
 
 
 def assign(id_name, value):
-    if exists(add_id):
+    if exists(id_name):
         temp_tail = semantic_table[id_name]
         temp_tail[1] = value
         semantic_table[id_name] = temp_tail
@@ -392,6 +388,7 @@ def list_type(list_of_id):
 
 
 def main():
+
     filepath = sys.argv[1]
 
     if not os.path.isfile(filepath):
@@ -412,7 +409,18 @@ def main():
         #semantico
     else:
         print("ERROR during syntax analysis")
-
+    
+    #test fx semantic
+    add_id('name_token', 'type', 'value')
+    add_id('name_token', 'typex', 'valuex')
+    add_id('name_token1', 'type1', 'value1')
+    add_id('name_token2', 'type2', 'value2')
+    add_id('name_token3', 'type3', 'value3')
+    print(semantic_table)
+    print(exists('name_token'))
+    assign('name_token', 'valuexxx')
+    print(type('name_token'))
+    print(semantic_table)
 
 if __name__ == '__main__':
     main()

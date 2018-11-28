@@ -32,8 +32,8 @@ evaluate(token_list): evaluate an operation and return its result
 
 evaluateBool(`any_lex`,<COMP_OPERATORS>.lexval,`any_lex`) : returns the boolean value of the comparation 
 
-check_elements_types(list): check that all the elements of a list have the same type, returns boolean
-list_type(list): returns a list with the types of the elements in the list
+check_elements_types(list_of_ids): check that all the elements of a list have the same type, returns boolean
+list_type(list_of_ids): returns a list with the types of the elements in the list
 
 `nfd_list_instructions`.execute() : ejecuta las instrucciones que esten dentro de la lista
 
