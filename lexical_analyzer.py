@@ -276,11 +276,10 @@ def is_non_terminal(item):
     else:
         return -1
 ######################Reglas semanticas implementadas##############################
-def program() :
+def program(temp_line_list,args_size ) :
     print("program start")
 
 def def_decl_call(temp_line_list,args_size):
-    print(args_size,"] input:", temp_line_list[0].token_type.name)
     if temp_line_list[0].token_type.name == "TYPE" :
         def_decl_call_1(temp_line_list,args_size-1)
     else:
@@ -298,7 +297,7 @@ def def_decl_call_1(temp_line_list, args_size):
 
 def def_decl_call_1_1 (temp_line_list, args_size):
     if len(temp_line_list) > 2:
-        add_id(temp_line_list[1].value, temp_line_list[0].value, any_lex(temp_line_list[3]) ) #  no compruebo si existe porque add_id ya lo hace    
+        add_id(temp_line_list[1].value, temp_line_list[0].value, any_lex(temp_line_list, args_size) ) #  no compruebo si existe porque add_id ya lo hace    
 
 def def_decl_call_assign_call (temp_line_list, args_size): # rule 3
     if not exists(temp_line_list[0].value):
@@ -315,9 +314,9 @@ def def_decl_call_assign_call (temp_line_list, args_size): # rule 3
     #                                               assign(<NAME>.lexval, `def_decl_call_2`.val)
 
     
-def any_lex (data):
-    if data.token_type.name == "STRING":
-        return data.value
+def any_lex (temp_line_list,args_size ):
+    if temp_line_list[-1].token_type.name == "STRING":
+        return temp_line_list[-1].value
     else :
         return 0
 
@@ -330,11 +329,10 @@ def implemented_rules(number_rule,temp_line_list,args_size ):
             3: def_decl_call_assign_call,
             4: def_decl_call_1,
             6: def_decl_call_1_1,
+            48: any_lex,
         }
-        if (number_rule != 1):
-            switcher[number_rule](temp_line_list,args_size)
-        else:
-            switcher[number_rule]()
+        switcher[number_rule](temp_line_list,args_size)
+
     else:
         return
     
@@ -344,6 +342,7 @@ def validate (token_list):  #sintactico
     stack=['$','program']
     temp_line =1 #linea donde comienza el código
     temp_line_list =[]
+    last_rule = 2
     for i in token_list:
         in_process = True
         a=45
@@ -353,7 +352,7 @@ def validate (token_list):  #sintactico
                 print (i.token_type.name, "Invalid number of quotes")
                 in_process = False
                 break
-            ##print("s:",stack)
+            # print("s:",stack)
             if i.token_type.name == 'OPEN_BRACKET' or i.token_type.name == 'CLOSE_BRACKET' or i.token_type.name == 'CONTROL_WORD' or i.token_type.name=='BOOLEAN_OPERATOR':
                term = terminals[i.value] 
             else:
@@ -365,8 +364,8 @@ def validate (token_list):  #sintactico
                 nonT=non_terminals[stack[-1]]
                 #print(stack[-1],"nonT:",nonT+1)
                 tmp = table[nonT][term]
-                number_rule = tmp+1
-                ##print ("rule:",tmp+1,rules[tmp+1]) #tmp+1 because rules start in 1 on the grammar
+                number_rule = tmp + 1
+                # print ("rule:",tmp+1,rules[tmp+1]) #tmp+1 because rules start in 1 on the grammar
                 if tmp != -1:
                     stack.pop()
                     stack+=rules[tmp+1]
@@ -378,13 +377,14 @@ def validate (token_list):  #sintactico
                     if i.lineN==temp_line:#seguimos en la linea
                         temp_line_list.append(i)
                     else:                  #cambiamos de linea
-                        print("rule: ", number_rule, "temp_line_list: ",temp_line_list)
-                        implemented_rules(number_rule,temp_line_list,len(temp_line_list))
+                        print("rule: ", last_rule, "temp_line_list: ",temp_line_list)
+                        implemented_rules(last_rule,temp_line_list,len(temp_line_list))
                         temp_line=temp_line+1
                         temp_line_list = []
                         temp_line_list.append(i)
+                        last_rule = number_rule
                     stack.pop()
-                    print("...................term founded", i.token_type.name," Linea: ", i.lineN)
+                    # print("...................term founded", i.token_type.name," Linea: ", i.lineN)
                     
                     in_process = False
     return True

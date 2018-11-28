@@ -1,4 +1,5 @@
- string  i = "algo"
- int as = "dog"
- int as = "dog"
- # xq solo captura al cambio de linea 
+ string  i = "algo" # 2
+ as = "dog"
+ string  o = "algo"
+ pepe = "dog"
+ pepe = "dog"
