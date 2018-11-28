@@ -411,8 +411,8 @@ def main():
         print("ERROR during syntax analysis")
     
     #test fx semantic
-    add_id('name_token', 'type', 'value')
-    add_id('name_token', 'typex', 'valuex')
+    add_id('name_token0', 'type0', 'value0')
+    add_id('name_token0', 'typex', 'valuex')
     add_id('name_token1', 'type1', 'value1')
     add_id('name_token2', 'type2', 'value2')
     add_id('name_token3', 'type3', 'value3')
