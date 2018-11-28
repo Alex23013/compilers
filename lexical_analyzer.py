@@ -310,10 +310,14 @@ def implemented_rules(number_rule,temp_line_list,args_size ):
     if args_size > 0:
         switcher = {
             1: program,
-            2: def_decl_call(temp_line_list,args_size),
-            4: def_decl_call_1(temp_line_list,args_size),
-            6: def_decl_call_1_1(temp_line_list,args_size),
+            2: def_decl_call,
+            4: def_decl_call_1,
+            6: def_decl_call_1_1,
         }
+        if (number_rule != 1):
+            switcher[number_rule](temp_line_list,args_size)
+        else:
+            switcher[number_rule]()
     else:
         return
     
