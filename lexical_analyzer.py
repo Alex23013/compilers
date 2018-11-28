@@ -299,6 +299,21 @@ def def_decl_call_1(temp_line_list, args_size):
 def def_decl_call_1_1 (temp_line_list, args_size):
     if len(temp_line_list) > 2:
         add_id(temp_line_list[1].value, temp_line_list[0].value, any_lex(temp_line_list[3]) ) #  no compruebo si existe porque add_id ya lo hace    
+
+def def_decl_call_assign_call (temp_line_list, args_size): # rule 3
+    if not exists(temp_line_list[0].value):
+        print("Error en la linea ", temp_line_list[0].lineN)
+        print(f"Error no se ha declarado la variable '{temp_line_list[0].value}'")
+
+
+    # if (`def_decl_call_2`.type is not an object of the class Function_type):
+    #                                               if (compare_types(`def_decl_call_2`.type, type(<NAME>.lexval)) == 0):
+    #                                                 <error> "El valor `def_decl_call_2`.val no se puede convertir a type(<NAME>.lexval)"
+    #                                                 <return>
+    #                                               if (compare_types(`def_decl_call_2`.type, type(<NAME>.lexval)) == -1):
+    #                                                 to_type(type(<NAME>.lexval), `def_decl_call_2`.val)
+    #                                               assign(<NAME>.lexval, `def_decl_call_2`.val)
+
     
 def any_lex (data):
     if data.token_type.name == "STRING":
@@ -306,11 +321,13 @@ def any_lex (data):
     else :
         return 0
 
+
 def implemented_rules(number_rule,temp_line_list,args_size ):
     if args_size > 0:
         switcher = {
             1: program,
             2: def_decl_call,
+            3: def_decl_call_assign_call,
             4: def_decl_call_1,
             6: def_decl_call_1_1,
         }
