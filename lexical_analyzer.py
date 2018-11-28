@@ -282,14 +282,19 @@ def program() :
 def def_decl_call(temp_line_list,args_size):
     print(args_size,"] input:", temp_line_list[0].token_type.name)
     if temp_line_list[0].token_type.name == "TYPE" :
-        implemented_rules(4,temp_line_list,args_size-1)
+        def_decl_call_1(temp_line_list,args_size-1)
+    else:
+        print("No se puede asignar una variable que no existe")
+        pass
+        #implemented_rules(4,temp_line_list,args_size-1)
 
     #if temp_line_list[0].token_type.name == "NAME" :
     #    implemented_rules(10,temp_line_list)
 
 def def_decl_call_1(temp_line_list, args_size):
     if temp_line_list[1].token_type.name == "NAME" :
-        implemented_rules(6,temp_line_list,args_size-1)
+        def_decl_call_1_1(temp_line_list,args_size-1)
+        #implemented_rules(6,temp_line_list,args_size-1)
 
 def def_decl_call_1_1 (temp_line_list, args_size):
     if len(temp_line_list) > 2:
@@ -358,7 +363,7 @@ def validate (token_list):  #sintactico
                         temp_line_list = []
                         temp_line_list.append(i)
                     stack.pop()
-                    print("...................term founded", i.token_type.name," [", i.lineN)
+                    print("...................term founded", i.token_type.name," Linea: ", i.lineN)
                     
                     in_process = False
     return True
