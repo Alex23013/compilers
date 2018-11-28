@@ -417,9 +417,9 @@ def main():
     add_id('name_token2', 'type2', 'value2')
     add_id('name_token3', 'type3', 'value3')
     print(semantic_table)
-    print(exists('name_token'))
-    assign('name_token', 'valuexxx')
-    print(type('name_token'))
+    print(exists('name_token0'))
+    assign('name_token0', 'valuexxx')
+    print(type('name_token0'))
     print(semantic_table)
 
 if __name__ == '__main__':
