@@ -338,6 +338,10 @@ def implemented_rules(number_rule,temp_line_list,args_size ):
     
 ######################Reglas semanticas implementadas##############################
 
+def def_decl_call_1_2(temp_line_list, args_size):
+    return
+
+
 def validate (token_list):  #sintactico
     stack=['$','program']
     temp_line =1 #linea donde comienza el código
