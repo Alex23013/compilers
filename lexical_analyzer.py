@@ -279,7 +279,7 @@ def is_non_terminal(item):
 def program(temp_line_list,args_size ) :
     print("program start")
 
-def def_decl_call(temp_line_list,args_size):
+def def_decl_call(temp_line_list,args_size): # 2
     if temp_line_list[0].token_type.name == "TYPE" :
         def_decl_call_1(temp_line_list,args_size-1)
     else:
@@ -290,14 +290,19 @@ def def_decl_call(temp_line_list,args_size):
     #if temp_line_list[0].token_type.name == "NAME" :
     #    implemented_rules(10,temp_line_list)
 
-def def_decl_call_1(temp_line_list, args_size):
+def def_decl_call_1(temp_line_list, args_size): # 4
     if temp_line_list[1].token_type.name == "NAME" :
         def_decl_call_1_1(temp_line_list,args_size-1)
         #implemented_rules(6,temp_line_list,args_size-1)
 
-def def_decl_call_1_1 (temp_line_list, args_size):
+def def_decl_call_1_1 (temp_line_list, args_size): # 6
     if len(temp_line_list) > 2:
-        add_id(temp_line_list[1].value, temp_line_list[0].value, any_lex(temp_line_list, args_size) ) #  no compruebo si existe porque add_id ya lo hace    
+        value, type_ = any_lex(temp_line_list, args_size) 
+        add_id(temp_line_list[1].value, temp_line_list[0].value, value) #  no compruebo si existe porque add_id ya lo hace    
+        if compare_types(temp_line_list[0].value, type_) == 0:
+            print("Error en la linea ", temp_line_list[0].lineN)
+            print (f"Error: tipos incompatibles: {temp_line_list[0].value} y {type_}")
+
 
 def def_decl_call_assign_call (temp_line_list, args_size): # rule 3
     if not exists(temp_line_list[0].value):
@@ -316,7 +321,9 @@ def def_decl_call_assign_call (temp_line_list, args_size): # rule 3
     
 def any_lex (temp_line_list,args_size ):
     if temp_line_list[-1].token_type.name == "STRING":
-        return temp_line_list[-1].value
+        return temp_line_list[-1].value, 'string'
+    if temp_line_list[-1].token_type.name == "NUMBER":
+        return temp_line_list[-1].value, 'int' 
     else :
         return 0
 
@@ -427,7 +434,7 @@ def add_id(id_name, type, value):
         tail = [type, value]
         semantic_table[id_name] = tail
     else:
-        print("Id exists, did not add")
+        print(f"Error ya existe el id '{id_name}'")
 
 
 def assign(id_name, value):
